@@ -68,8 +68,8 @@ public class DrawFrame extends JFrame {
         toolBar1.setPreferredSize(new Dimension(1900, 50));
         tabbedPane.addTab("文件", toolBar1);
         JButton fileClose = new JButton("关闭");
-        fileClose.setFont(new Font("黑体", Font.PLAIN, 18));
-        fileClose.setPreferredSize(new Dimension(50, 30));
+        fileClose.setFont(new Font("黑体", Font.PLAIN, 20));
+        fileClose.setPreferredSize(new Dimension(100, 30));
         fileClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -148,10 +148,10 @@ public class DrawFrame extends JFrame {
         //设置绝对布局，在窗口显示后创建控件默认为绝对布局，需要手动指定坐标和宽高
         jPanelCenter.setLayout(null);
         jPanelCenter.setBackground(Color.white);
-        jPanelCenter.setPreferredSize(new Dimension(200, 100));
         jPanelCenter.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         //右侧画图面板添加判断选中监听器
         jPanelCenter.addMouseListener(selectListener);
+        jPanelCenter.addMouseMotionListener(selectListener);
 
 
         //4.将以上加入到主面板对应位置

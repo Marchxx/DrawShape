@@ -35,7 +35,7 @@ public class MoveListener implements ActionListener {
         for (ShapeBase shapeBase : shapeBaseList) {
             if (shapeBase.isChecked()) {
                 move(shapeBase, e.getActionCommand());
-                break;
+                //break;
             }
         }
         drawPanel.repaint();
