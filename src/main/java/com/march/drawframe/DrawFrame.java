@@ -1,13 +1,17 @@
 package com.march.drawframe;
 
+import com.march.eneity.ShapeBase;
+import com.march.eneity.impl.MyButton;
 import com.march.listener.CopyListener;
 import com.march.listener.CreateListener;
 import com.march.listener.MoveListener;
 import com.march.listener.SelectListener;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class DrawFrame extends JFrame {
 
@@ -51,16 +55,33 @@ public class DrawFrame extends JFrame {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout(10, 10));
 
+
         //1.创建顶部面板
         JPanel jPanelUp = new JPanel();
         jPanelUp.setLayout(new FlowLayout(FlowLayout.LEFT));
-        //放置菜单棒
-        jPanelUp.add(new DrawMenuBar());
-        //放置标签
-        JLabel jLabel = new JLabel("请选择要创建的图形：");
-        jLabel.setFont(new Font("黑体", Font.PLAIN, 20));
-        jPanelUp.add(jLabel);
-        //放置按钮
+        // 创建选项卡
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setFont(new Font("黑体", Font.PLAIN, 20));
+        //设置菜单1
+        JToolBar toolBar1 = new JToolBar();
+        toolBar1.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        toolBar1.setPreferredSize(new Dimension(1900, 50));
+        tabbedPane.addTab("文件", toolBar1);
+        JButton fileClose = new JButton("关闭");
+        fileClose.setFont(new Font("黑体", Font.PLAIN, 18));
+        fileClose.setPreferredSize(new Dimension(50, 30));
+        fileClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        toolBar1.add(fileClose);
+        //设置菜单2
+        JToolBar toolBar2 = new JToolBar();
+        toolBar2.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        toolBar2.setPreferredSize(new Dimension(1900, 50));
+        tabbedPane.addTab("绘制图形", toolBar2);
         String[] typeArray = {"线段", "矩形", "圆", "按钮"};
         for (int i = 0; i < typeArray.length; i++) {
             JButton button = new JButton(typeArray[i]);
@@ -68,13 +89,13 @@ public class DrawFrame extends JFrame {
             button.setPreferredSize(new Dimension(100, 30));
             //按钮添加创建监听器
             button.addActionListener(createListener);
-            jPanelUp.add(button);
+            toolBar2.add(button);
         }
-        //放置标签
-        JLabel jLabe2 = new JLabel("请选择：");
-        jLabe2.setFont(new Font("黑体", Font.PLAIN, 20));
-        jPanelUp.add(jLabe2);
-        //放置按钮
+        //设置菜单3
+        JToolBar toolBar3 = new JToolBar();
+        toolBar3.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        toolBar3.setPreferredSize(new Dimension(1900, 50));
+        tabbedPane.addTab("操作图形", toolBar3);
         String[] typeArray1 = {"左移", "右移", "上移", "下移"};
         for (int i = 0; i < typeArray1.length; i++) {
             JButton button = new JButton(typeArray1[i]);
@@ -82,21 +103,45 @@ public class DrawFrame extends JFrame {
             button.setPreferredSize(new Dimension(100, 30));
             //按钮添加移动监听器
             button.addActionListener(moveListener);
-            jPanelUp.add(button);
+            toolBar3.add(button);
         }
         //放置复制按钮
-        JButton button = new JButton("复制");
-        button.setFont(new Font("黑体", Font.PLAIN, 20));
-        button.setPreferredSize(new Dimension(100, 30));
-        //按钮添加拷贝监听器
-        button.addActionListener(copyListener);
-        jPanelUp.add(button);
+        JButton buttonCopy = new JButton("复制");
+        buttonCopy.setFont(new Font("黑体", Font.PLAIN, 20));
+        buttonCopy.setPreferredSize(new Dimension(100, 30));
+        buttonCopy.addActionListener(copyListener);
+        toolBar3.add(buttonCopy);
+        //放置清空按钮
+        JButton buttonCls = new JButton("清空");
+        buttonCls.setFont(new Font("黑体", Font.PLAIN, 20));
+        buttonCls.setPreferredSize(new Dimension(100, 30));
+        buttonCls.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //遍历列表，若为自定义组件在容器中remove
+                List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
+                for (ShapeBase shapeBase : shapeBaseList) {
+                    if (shapeBase instanceof MyButton) {
+                        jPanelCenter.remove(((MyButton) shapeBase).getButton());
+                    }
+                }
+                shapeBaseList.clear();
+                jPanelCenter.repaint();
+            }
+        });
+        toolBar3.add(buttonCls);
+
+        jPanelUp.add(tabbedPane, FlowLayout.LEFT);
+        //设置默认选中的选项卡
+        tabbedPane.setSelectedIndex(1);
+
 
         //2.创建左侧面板
         JPanel jPanelLeft = new JPanel();
         jPanelLeft.setBorder(BorderFactory.createEtchedBorder());
         jPanelLeft.setBackground(Color.white);
         jPanelLeft.setPreferredSize(new Dimension(200, 100));
+
 
         //3.创建右侧画图面板
         jPanelCenter = new DrawPanel();
@@ -107,6 +152,7 @@ public class DrawFrame extends JFrame {
         jPanelCenter.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         //右侧画图面板添加判断选中监听器
         jPanelCenter.addMouseListener(selectListener);
+
 
         //4.将以上加入到主面板对应位置
         mainPanel.add(jPanelUp, BorderLayout.NORTH);
