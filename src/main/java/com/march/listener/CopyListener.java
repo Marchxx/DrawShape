@@ -14,8 +14,8 @@ import java.util.List;
 public class CopyListener implements ActionListener {
 
     private Graphics2D g2d;//画笔对象，主窗体传入
-    private DrawPanel drawPanel;//面板对象，用来计算宽度、高度
-    private List<ShapeBase> shapeBaseList = null;//保存主面板图形列表的引用
+    private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
+    private List<ShapeBase> shapeBaseList = null;//通过drawPanel获取
 
     public static final CopyListener singletonCopyListener = new CopyListener();
 
@@ -33,7 +33,9 @@ public class CopyListener implements ActionListener {
         if (shapeBaseList == null)
             return;
         //Note：使用迭代器和增强for遍历列表元素时动态删除和修改会报java.util.ConcurrentModificationException
-        for (int i = 0; i < shapeBaseList.size(); i++) {
+        //只涉及动态增加，使用listSize为定值遍历集合
+        int listSize = shapeBaseList.size();
+        for (int i = 0; i < listSize; i++) {
             ShapeBase shapeBase = shapeBaseList.get(i);
             if (shapeBase.isChecked()) {
                 clone(shapeBase);

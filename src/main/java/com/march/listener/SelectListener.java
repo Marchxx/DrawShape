@@ -2,7 +2,9 @@ package com.march.listener;
 
 import com.march.drawframe.DrawPanel;
 import com.march.eneity.ShapeBase;
+import com.march.eneity.ShapeComposite;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,9 +16,9 @@ import java.util.List;
  */
 public class SelectListener implements MouseListener, MouseMotionListener {
 
-    private DrawPanel drawPanel;//面板对象，用来计算宽度、高度
+    private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
     private Graphics2D g2d;//画笔对象，主窗体传入
-    private List<ShapeBase> shapeBaseList = null; //保存主面板图形列表的引用
+    private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
     private Point startPoint = new Point();//鼠标选框左上角坐标
     private Point endPoint = new Point();//鼠标选框右下角坐标
 
@@ -64,7 +66,7 @@ public class SelectListener implements MouseListener, MouseMotionListener {
         if (!startPoint.equals(endPoint)) {
             g2d.drawRect(startPoint.x, startPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
             shapeBaseList = drawPanel.getShapeBaseList();
-            System.out.println("当前列表：" + shapeBaseList);
+            //System.out.println("当前列表：" + shapeBaseList);
             if (shapeBaseList == null)
                 return;
             //鼠标画框实现多选
@@ -115,6 +117,14 @@ public class SelectListener implements MouseListener, MouseMotionListener {
         for (ShapeBase shapeBase : shapeBaseList) {
             if (shapeBase.isSelected(e.getX(), e.getY(), e)) {
                 shapeBase.setChecked(true);
+
+                //若选中组合对象，显示消息
+                if (shapeBase instanceof ShapeComposite) {
+                    ShapeComposite composite = (ShapeComposite) shapeBase;
+                    String printAll = composite.printAll(new StringBuilder());
+                    JOptionPane.showMessageDialog(drawPanel, printAll);
+                }
+
                 //判定成功直接break，若为组合对象会将其叶子全部设置
                 break;
             }

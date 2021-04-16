@@ -13,18 +13,16 @@ import java.util.List;
  */
 public class MoveListener implements ActionListener {
 
-    private Graphics2D g2d;//画笔对象，主窗体传入
-    private DrawPanel drawPanel;//面板对象，用来计算宽度、高度
-    private List<ShapeBase> shapeBaseList = null;//保存主面板图形列表的引用
+    private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
+    private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
 
     public static final MoveListener singletonMoveListener = new MoveListener();
 
     private MoveListener() {
     }
 
-    public static void setProperties(DrawPanel drawPanel, Graphics2D g2d) {
+    public static void setProperties(DrawPanel drawPanel) {
         singletonMoveListener.drawPanel = drawPanel;
-        singletonMoveListener.g2d = g2d;
     }
 
     @Override

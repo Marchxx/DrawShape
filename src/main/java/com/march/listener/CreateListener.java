@@ -17,9 +17,9 @@ import java.util.Random;
 public class CreateListener implements ActionListener {
 
 
-    private DrawPanel drawPanel;//面板对象，用来计算宽度、高度
+    private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
     private Graphics2D g2d;//画笔对象，主窗体传入
-    private List<ShapeBase> shapeBaseList = null; //保存主面板图形列表的引用
+    private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
 
     public static final CreateListener singletonCreateListener = new CreateListener();
 

@@ -1,11 +1,6 @@
 package com.march.drawframe;
 
-import com.march.eneity.ShapeBase;
-import com.march.eneity.impl.MyButton;
-import com.march.listener.CopyListener;
-import com.march.listener.CreateListener;
-import com.march.listener.MoveListener;
-import com.march.listener.SelectListener;
+import com.march.listener.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,8 +29,9 @@ public class DrawFrame extends JFrame {
         //设置 画图面板和画笔
         CreateListener.setProperties(jPanelCenter, (Graphics2D) g);
         CopyListener.setProperties(jPanelCenter, (Graphics2D) g);
-        MoveListener.setProperties(jPanelCenter, (Graphics2D) g);
         SelectListener.setProperties(jPanelCenter, (Graphics2D) g);
+        MoveListener.setProperties(jPanelCenter);
+        CompositeListener.setProperties(jPanelCenter);
     }
 
     /**
@@ -59,7 +55,8 @@ public class DrawFrame extends JFrame {
         DrawJToolBar drawJToolBar = new DrawJToolBar();
         tabbedPane.addTab("文件", drawJToolBar.getFileJToolBar());//设置菜单1
         tabbedPane.addTab("绘制图形", drawJToolBar.getDrawJToolBar()); //设置菜单2
-        tabbedPane.addTab("操作图形", drawJToolBar.getEditJToolBar()); //设置菜单3
+        tabbedPane.addTab("移动图形", drawJToolBar.getMoveJToolBar()); //设置菜单3
+        tabbedPane.addTab("基本操作", drawJToolBar.getEditJToolBar()); //设置菜单4
         jPanelUp.add(tabbedPane, FlowLayout.LEFT);
         //设置默认选中的选项卡
         tabbedPane.setSelectedIndex(1);

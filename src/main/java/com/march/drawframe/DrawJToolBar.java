@@ -1,10 +1,8 @@
 package com.march.drawframe;
 
 import com.march.eneity.ShapeBase;
-import com.march.eneity.ShapeComposite;
 import com.march.eneity.impl.MyButton;
-import com.march.factory.ShapeFactory;
-import com.march.factory.impl.StandardShapeFactory;
+import com.march.listener.CompositeListener;
 import com.march.listener.CopyListener;
 import com.march.listener.CreateListener;
 import com.march.listener.MoveListener;
@@ -13,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,6 +22,7 @@ public class DrawJToolBar {
     private CreateListener createListener = CreateListener.singletonCreateListener;
     private MoveListener moveListener = MoveListener.singletonMoveListener;
     private CopyListener copyListener = CopyListener.singletonCopyListener;
+    private CompositeListener compositeListener = CompositeListener.singletonCompositeListener;
 
     private DrawPanel jPanelCenter;//中心画图面板
 
@@ -64,6 +62,23 @@ public class DrawJToolBar {
             }
         });
         toolBar.add(fileClose);
+        //放置清空按钮
+        JButton buttonCls = getNewButton("清空画板");
+        buttonCls.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //点击清空：遍历列表，若为自定义组件在容器中remove
+                List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
+                for (ShapeBase shapeBase : shapeBaseList) {
+                    if (shapeBase instanceof MyButton) {
+                        jPanelCenter.remove(((MyButton) shapeBase).getButton());
+                    }
+                }
+                shapeBaseList.clear();
+                jPanelCenter.repaint();
+            }
+        });
+        toolBar.add(buttonCls);
         return toolBar;
     }
 
@@ -82,7 +97,7 @@ public class DrawJToolBar {
     }
 
 
-    public JToolBar getEditJToolBar() {
+    public JToolBar getMoveJToolBar() {
         //设置菜单3
         JToolBar toolBar = getNewToolBar();
         String[] typeArray = {"左移", "右移", "上移", "下移"};
@@ -92,52 +107,26 @@ public class DrawJToolBar {
             button.addActionListener(moveListener);
             toolBar.add(button);
         }
+        return toolBar;
+    }
+
+
+    public JToolBar getEditJToolBar() {
+        //设置菜单4
+        JToolBar toolBar = getNewToolBar();
         //放置复制按钮
         JButton buttonCopy = getNewButton("复制");
         buttonCopy.addActionListener(copyListener);
         toolBar.add(buttonCopy);
-        //放置清空按钮
-        JButton buttonCls = getNewButton("清空");
-        buttonCls.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //点击清空：遍历列表，若为自定义组件在容器中remove
-                List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
-                for (ShapeBase shapeBase : shapeBaseList) {
-                    if (shapeBase instanceof MyButton) {
-                        jPanelCenter.remove(((MyButton) shapeBase).getButton());
-                    }
-                }
-                shapeBaseList.clear();
-                jPanelCenter.repaint();
-            }
-        });
-        toolBar.add(buttonCls);
         //放置组合按钮
         JButton buttonComposite = getNewButton("组合");
-        buttonComposite.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
-                //1.图形工厂对象创建组合图形
-                ShapeFactory shapeFactory = StandardShapeFactory.shapeFactory;
-                ShapeComposite composite = (ShapeComposite) shapeFactory.createComposite("组合对象");
-                //2.通过迭代器遍历，能够在遍历list动态删除元素
-                Iterator<ShapeBase> iterator = shapeBaseList.iterator();
-                while (iterator.hasNext()) {
-                    ShapeBase shapeBase = iterator.next();
-                    if (shapeBase.isChecked()) {
-                        //Note:使用ArrayList的remove会报并发修改异常
-                        composite.add(shapeBase);
-                        iterator.remove();
-                    }
-                }
-                shapeBaseList.add(composite);
-            }
-        });
+        buttonComposite.addActionListener(compositeListener);
         toolBar.add(buttonComposite);
+        //放置解除组合按钮
+        JButton buttonUnComposite = getNewButton("解除组合");
+        buttonUnComposite.addActionListener(compositeListener);
+        toolBar.add(buttonUnComposite);
         return toolBar;
     }
-
 
 }

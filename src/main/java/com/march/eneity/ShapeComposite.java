@@ -1,6 +1,9 @@
 package com.march.eneity;
 
 
+import com.march.factory.ShapeFactory;
+import com.march.factory.impl.StandardShapeFactory;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -28,12 +31,26 @@ public class ShapeComposite extends ShapeBase {
         shapeBaseList.remove(shapeBase);
     }
 
-    public void getChildren() {
-        for (ShapeBase shapeBase : shapeBaseList) {
-            System.out.println(shapeBase);
-        }
+    public List<ShapeBase> getChildren() {
+        return shapeBaseList;
     }
 
+    public String printAll(StringBuilder sb) {
+        sb.append("{ \n" + "    组合节点：" + this);
+        sb.append("    叶子数量=" + this.shapeBaseList.size() + "\n");
+        for (ShapeBase child : getChildren()) {
+            if (child instanceof ShapeComposite) {
+                ShapeComposite composite = (ShapeComposite) child;
+                //递归调用，获取当前根结点的字符串表示
+                String printAll = composite.printAll(new StringBuilder());
+                sb.append(printAll);
+            } else {
+                sb.append("    叶子节点：" + child + "\n");
+            }
+        }
+        sb.append("}\n");
+        return sb.toString();
+    }
 
     //组合对象继承的通用方法：分发给列表对象递归调用
     @Override
@@ -64,10 +81,15 @@ public class ShapeComposite extends ShapeBase {
 
     @Override
     public ShapeBase clone() {
+        //1.创建一个组合对象
+        ShapeComposite cloneComposite = (ShapeComposite) StandardShapeFactory.shapeFactory.createComposite(this.getName());
+        //2.遍历图形集合，分别调用叶子的克隆方法
         for (ShapeBase shapeBase : shapeBaseList) {
-            shapeBase.clone();
+            ShapeBase clone = shapeBase.clone();
+            cloneComposite.add(clone);
         }
-        return null;
+        //3.返回组合对象
+        return cloneComposite;
     }
 
     @Override
