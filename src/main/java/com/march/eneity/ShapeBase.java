@@ -34,35 +34,22 @@ public abstract class ShapeBase {
         this.name = name;
     }
 
-    /**
-     * 绘图方法，参数为面板的画笔对象
-     */
+
+    //抽象方法：绘图，参数为面板的画笔对象
     public abstract void draw(Graphics2D g2d);
 
 
-    /**
-     * 移动方法，根据指令进行移动
-     *
-     * @param operation
-     */
+    //抽象方法：移动，根据指令进行移动
     public abstract void move(String operation);
 
-    /**
-     * 判断是否被选中，参数为鼠标坐标
-     *
-     * @param x
-     * @param y
-     * @return
-     */
+
+    //抽象方法：判断是否被选中，参数为鼠标坐标
     public abstract boolean isSelected(int x, int y);
 
 
-    /**
-     * 对象的克隆方法
-     *
-     * @return
-     */
+    //抽象方法：对象克隆
     public abstract ShapeBase clone();
+
 
     /**
      * 根据选中状态调整画笔属性
@@ -72,10 +59,10 @@ public abstract class ShapeBase {
      */
     public Graphics2D adjustBrush(Graphics2D g2d) {
         if (isChecked()) {
-            g2d.setStroke(new BasicStroke(4.0f));
+            g2d.setStroke(new BasicStroke(3.5f));
             g2d.setColor(Color.red);
         } else {
-            g2d.setStroke(new BasicStroke(3.0f));
+            g2d.setStroke(new BasicStroke(2.0f));
             g2d.setColor(Color.BLACK);
         }
         return g2d;
