@@ -3,6 +3,7 @@ package com.march.eneity.impl;
 import com.march.eneity.ShapeBase;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * 线段类
@@ -49,7 +50,7 @@ public class Line extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y) {
+    public boolean isSelected(int x, int y, MouseEvent e) {
         //点到直线的距离公式
         double A = (endY - startY) * 1.0 / (endX - startX);
         double B = -1;

@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * 监听器：响应复制按钮，绘制clone图形

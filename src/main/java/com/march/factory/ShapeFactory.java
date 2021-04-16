@@ -17,4 +17,6 @@ public interface ShapeFactory {
 
     ShapeBase createButton(String name, int leftUpX, int leftUpY, JPanel drawPanel);
 
+    ShapeBase createComposite(String name);
+
 }

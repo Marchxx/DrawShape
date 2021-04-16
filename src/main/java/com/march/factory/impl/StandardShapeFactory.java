@@ -1,6 +1,7 @@
 package com.march.factory.impl;
 
 import com.march.eneity.ShapeBase;
+import com.march.eneity.ShapeComposite;
 import com.march.eneity.impl.Circle;
 import com.march.eneity.impl.Line;
 import com.march.eneity.impl.MyButton;
@@ -44,5 +45,10 @@ public class StandardShapeFactory implements ShapeFactory {
     @Override
     public ShapeBase createButton(String name, int leftUpX, int leftUpY, JPanel drawPanel) {
         return new MyButton(name, leftUpX, leftUpY, drawPanel);
+    }
+
+    @Override
+    public ShapeBase createComposite(String name) {
+        return new ShapeComposite(name);
     }
 }

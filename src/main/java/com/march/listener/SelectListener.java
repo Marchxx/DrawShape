@@ -2,9 +2,7 @@ package com.march.listener;
 
 import com.march.drawframe.DrawPanel;
 import com.march.eneity.ShapeBase;
-import com.march.eneity.impl.MyButton;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -34,6 +32,7 @@ public class SelectListener implements MouseListener, MouseMotionListener {
 
     /**
      * 鼠标点击：实现图形单选
+     * 单选操作用于一个组合对象，如果选中则直接break，无需判定列表后续元素
      *
      * @param e
      */
@@ -61,14 +60,18 @@ public class SelectListener implements MouseListener, MouseMotionListener {
     public void mouseReleased(MouseEvent e) {
         endPoint.x = e.getX();
         endPoint.y = e.getY();
-        g2d.drawRect(startPoint.x, startPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
-        shapeBaseList = drawPanel.getShapeBaseList();
-        if (shapeBaseList == null)
-            return;
-        //鼠标画框实现多选
-        cancelSelected();
-        multiSelect(startPoint, endPoint);
-        drawPanel.repaint();
+        //与单选进行区分
+        if (!startPoint.equals(endPoint)) {
+            g2d.drawRect(startPoint.x, startPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
+            shapeBaseList = drawPanel.getShapeBaseList();
+            System.out.println("当前列表：" + shapeBaseList);
+            if (shapeBaseList == null)
+                return;
+            //鼠标画框实现多选
+            cancelSelected();
+            multiSelect(startPoint, endPoint, e);
+            drawPanel.repaint();
+        }
     }
 
     @Override
@@ -110,18 +113,9 @@ public class SelectListener implements MouseListener, MouseMotionListener {
      */
     private void singleSelect(MouseEvent e) {
         for (ShapeBase shapeBase : shapeBaseList) {
-            //判断点击处是否为控件，获取坐标
-            int x, y;
-            if (shapeBase instanceof MyButton && e.getSource() instanceof JButton) {
-                JButton jButton = (JButton) e.getSource();
-                x = jButton.getX();
-                y = jButton.getY();
-            } else {
-                x = e.getX();
-                y = e.getY();
-            }
-            if (shapeBase.isSelected(x, y)) {
+            if (shapeBase.isSelected(e.getX(), e.getY(), e)) {
                 shapeBase.setChecked(true);
+                //判定成功直接break，若为组合对象会将其叶子全部设置
                 break;
             }
         }
@@ -133,14 +127,14 @@ public class SelectListener implements MouseListener, MouseMotionListener {
      * @param startPoint
      * @param endPoint
      */
-    private void multiSelect(Point startPoint, Point endPoint) {
+    private void multiSelect(Point startPoint, Point endPoint, MouseEvent e) {
         //1.遍历图形集合
         for (ShapeBase shapeBase : shapeBaseList) {
             //2.遍历所有坐标点
             for (int x = startPoint.x; x <= endPoint.x; x++) {
                 boolean flag = false;
                 for (int y = startPoint.y; y <= endPoint.y; y++) {
-                    if (shapeBase.isSelected(x, y)) {
+                    if (shapeBase.isSelected(x, y, e)) {
                         shapeBase.setChecked(true);
                         flag = true;
                         break;

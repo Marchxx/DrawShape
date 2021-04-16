@@ -5,6 +5,7 @@ import com.march.listener.SelectListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * 设计模式：基于对象的适配器。在MyButton类中引用原生JButton，将其整合到图形对象中
@@ -47,8 +48,18 @@ public class MyButton extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y) {
-        return x == button.getX() && y == button.getY();
+    public boolean isSelected(int x, int y, MouseEvent e) {
+        //判断点击处是否为控件，获取坐标
+        if (e.getSource() instanceof JButton) {
+            JButton jButton = (JButton) e.getSource();
+            x = jButton.getX();
+            y = jButton.getY();
+        }
+        int boundLeftX = button.getX() - 10;
+        int boundRightX = button.getX() + button.getWidth() + 10;
+        int boundUpY = button.getY() - 10;
+        int boundDownY = button.getY() + button.getHeight() + 10;
+        return x >= boundLeftX && x <= boundRightX && y >= boundUpY && y <= boundDownY;
     }
 
     @Override

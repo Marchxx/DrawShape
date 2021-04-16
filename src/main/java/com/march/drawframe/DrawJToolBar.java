@@ -1,7 +1,10 @@
 package com.march.drawframe;
 
 import com.march.eneity.ShapeBase;
+import com.march.eneity.ShapeComposite;
 import com.march.eneity.impl.MyButton;
+import com.march.factory.ShapeFactory;
+import com.march.factory.impl.StandardShapeFactory;
 import com.march.listener.CopyListener;
 import com.march.listener.CreateListener;
 import com.march.listener.MoveListener;
@@ -10,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,7 +27,6 @@ public class DrawJToolBar {
     private CopyListener copyListener = CopyListener.singletonCopyListener;
 
     private DrawPanel jPanelCenter;//中心画图面板
-    private JToolBar toolBar = null;//用来返回
 
     public void setjPanelCenter(DrawPanel jPanelCenter) {
         this.jPanelCenter = jPanelCenter;
@@ -32,19 +35,28 @@ public class DrawJToolBar {
     /**
      * 统一调整菜单条样式
      */
-    public void getNewInstance() {
-        toolBar = new JToolBar();
+    public JToolBar getNewToolBar() {
+        JToolBar toolBar = new JToolBar();
         toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
         toolBar.setPreferredSize(new Dimension(1900, 50));
+        return toolBar;
+    }
+
+    /**
+     * 统一调整按钮样式
+     */
+    public JButton getNewButton(String label) {
+        JButton jButton = new JButton(label);
+        jButton.setFont(new Font("黑体", Font.PLAIN, 20));
+        jButton.setPreferredSize(new Dimension(100, 30));
+        return jButton;
     }
 
 
     public JToolBar getFileJToolBar() {
         //设置菜单1
-        getNewInstance();
-        JButton fileClose = new JButton("关闭");
-        fileClose.setFont(new Font("黑体", Font.PLAIN, 20));
-        fileClose.setPreferredSize(new Dimension(100, 30));
+        JToolBar toolBar = getNewToolBar();
+        JButton fileClose = getNewButton("关闭");
         fileClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -58,12 +70,10 @@ public class DrawJToolBar {
 
     public JToolBar getDrawJToolBar() {
         //设置菜单2
-        getNewInstance();
+        JToolBar toolBar = getNewToolBar();
         String[] typeArray = {"线段", "矩形", "圆", "按钮"};
         for (int i = 0; i < typeArray.length; i++) {
-            JButton button = new JButton(typeArray[i]);
-            button.setFont(new Font("黑体", Font.PLAIN, 20));
-            button.setPreferredSize(new Dimension(100, 30));
+            JButton button = getNewButton(typeArray[i]);
             //按钮添加创建监听器
             button.addActionListener(createListener);
             toolBar.add(button);
@@ -74,26 +84,20 @@ public class DrawJToolBar {
 
     public JToolBar getEditJToolBar() {
         //设置菜单3
-        getNewInstance();
-        String[] typeArray1 = {"左移", "右移", "上移", "下移"};
-        for (int i = 0; i < typeArray1.length; i++) {
-            JButton button = new JButton(typeArray1[i]);
-            button.setFont(new Font("黑体", Font.PLAIN, 20));
-            button.setPreferredSize(new Dimension(100, 30));
+        JToolBar toolBar = getNewToolBar();
+        String[] typeArray = {"左移", "右移", "上移", "下移"};
+        for (int i = 0; i < typeArray.length; i++) {
+            JButton button = getNewButton(typeArray[i]);
             //按钮添加移动监听器
             button.addActionListener(moveListener);
             toolBar.add(button);
         }
         //放置复制按钮
-        JButton buttonCopy = new JButton("复制");
-        buttonCopy.setFont(new Font("黑体", Font.PLAIN, 20));
-        buttonCopy.setPreferredSize(new Dimension(100, 30));
+        JButton buttonCopy = getNewButton("复制");
         buttonCopy.addActionListener(copyListener);
         toolBar.add(buttonCopy);
         //放置清空按钮
-        JButton buttonCls = new JButton("清空");
-        buttonCls.setFont(new Font("黑体", Font.PLAIN, 20));
-        buttonCls.setPreferredSize(new Dimension(100, 30));
+        JButton buttonCls = getNewButton("清空");
         buttonCls.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -109,6 +113,29 @@ public class DrawJToolBar {
             }
         });
         toolBar.add(buttonCls);
+        //放置组合按钮
+        JButton buttonComposite = getNewButton("组合");
+        buttonComposite.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
+                //1.图形工厂对象创建组合图形
+                ShapeFactory shapeFactory = StandardShapeFactory.shapeFactory;
+                ShapeComposite composite = (ShapeComposite) shapeFactory.createComposite("组合对象");
+                //2.通过迭代器遍历，能够在遍历list动态删除元素
+                Iterator<ShapeBase> iterator = shapeBaseList.iterator();
+                while (iterator.hasNext()) {
+                    ShapeBase shapeBase = iterator.next();
+                    if (shapeBase.isChecked()) {
+                        //Note:使用ArrayList的remove会报并发修改异常
+                        composite.add(shapeBase);
+                        iterator.remove();
+                    }
+                }
+                shapeBaseList.add(composite);
+            }
+        });
+        toolBar.add(buttonComposite);
         return toolBar;
     }
 

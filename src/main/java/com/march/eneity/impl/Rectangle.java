@@ -3,6 +3,7 @@ package com.march.eneity.impl;
 import com.march.eneity.ShapeBase;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * 矩形类
@@ -46,7 +47,7 @@ public class Rectangle extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y) {
+    public boolean isSelected(int x, int y, MouseEvent e) {
         int boundLeftX = leftUpX - 10;
         int boundRightX = leftUpX + width + 10;
         int boundUpY = leftUpY - 10;
