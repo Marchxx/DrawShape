@@ -119,8 +119,8 @@ public class SelectListener implements MouseListener, MouseMotionListener {
                 shapeBase.setChecked(true);
 
                 //若选中组合对象，显示消息
-                if (shapeBase instanceof ShapeComposite) {
-                    ShapeComposite composite = (ShapeComposite) shapeBase;
+                if (shapeBase.getComposite() != null) {
+                    ShapeComposite composite = shapeBase.getComposite();
                     String printAll = composite.printAll(new StringBuilder());
                     JOptionPane.showMessageDialog(drawPanel, printAll);
                 }

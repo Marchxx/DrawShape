@@ -53,10 +53,22 @@ public abstract class ShapeBase {
 
 
     /**
+     * 清空图形：默认图形无实现，第三方组件类如MyButton进行重写
+     */
+    public void clearShape() {
+    }
+
+
+    /**
+     * 解耦：基类默认返回null，组合对象返回this。避免程序运行时动态判断基类引用对应的实现类
+     */
+    public ShapeComposite getComposite() {
+        return null;
+    }
+
+
+    /**
      * 根据选中状态调整画笔属性
-     *
-     * @param g2d
-     * @return
      */
     public Graphics2D adjustBrush(Graphics2D g2d) {
         if (isChecked()) {
@@ -73,8 +85,6 @@ public abstract class ShapeBase {
     /**
      * 根据operation计算偏移值
      * this：实现类调用的对象
-     *
-     * @param operation
      */
     public void calculateDelta(String operation) {
         switch (operation) {

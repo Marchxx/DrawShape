@@ -70,4 +70,10 @@ public class MyButton extends ShapeBase {
         drawPanel.add(clone.getButton());
         return clone;
     }
+
+    @Override
+    public void clearShape() {
+        //在画板上清除该组件
+        drawPanel.remove(button);
+    }
 }

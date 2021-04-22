@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -67,12 +68,10 @@ public class DrawJToolBar {
         buttonCls.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //点击清空：遍历列表，若为自定义组件在容器中remove
+                //点击清空：遍历列表
                 List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
                 for (ShapeBase shapeBase : shapeBaseList) {
-                    if (shapeBase instanceof MyButton) {
-                        jPanelCenter.remove(((MyButton) shapeBase).getButton());
-                    }
+                    shapeBase.clearShape();
                 }
                 shapeBaseList.clear();
                 jPanelCenter.repaint();
@@ -126,6 +125,26 @@ public class DrawJToolBar {
         JButton buttonUnComposite = getNewButton("解除组合");
         buttonUnComposite.addActionListener(compositeListener);
         toolBar.add(buttonUnComposite);
+        //放置解除组合按钮
+        JButton buttonClickClear = getNewButton("清除选中");
+        buttonClickClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //点击清空：遍历列表
+                List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
+                //通过迭代器遍历，能够在遍历list动态删除元素
+                Iterator<ShapeBase> iterator = shapeBaseList.iterator();
+                while (iterator.hasNext()) {
+                    ShapeBase shapeBase = iterator.next();
+                    if (shapeBase.isChecked()) {
+                        shapeBase.clearShape();
+                        iterator.remove();
+                    }
+                }
+                jPanelCenter.repaint();
+            }
+        });
+        toolBar.add(buttonClickClear);
         return toolBar;
     }
 

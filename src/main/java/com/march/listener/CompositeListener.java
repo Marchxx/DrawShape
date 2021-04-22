@@ -65,8 +65,8 @@ public class CompositeListener implements ActionListener {
         shapeBaseList = drawPanel.getShapeBaseList();
         for (int i = 0; i < shapeBaseList.size(); i++) {
             ShapeBase shapeBase = shapeBaseList.get(i);
-            if (shapeBase instanceof ShapeComposite) {
-                ShapeComposite composite = (ShapeComposite) shapeBase;
+            if (shapeBase.getComposite() != null) {
+                ShapeComposite composite = shapeBase.getComposite();
                 //1.判断组合对象是否被选中
                 if (shapeBase.isChecked()) {
                     //2.在列表中删除组合，并将其叶子加入列表

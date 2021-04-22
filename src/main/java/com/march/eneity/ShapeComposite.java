@@ -101,4 +101,16 @@ public class ShapeComposite extends ShapeBase {
             shapeBase.setChecked(checked);
         }
     }
+
+    @Override
+    public ShapeComposite getComposite() {
+        return this;
+    }
+
+    @Override
+    public void clearShape() {
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.clearShape();
+        }
+    }
 }
