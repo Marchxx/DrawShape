@@ -1,7 +1,6 @@
 package com.march.eneity.composite;
 
 
-
 import com.march.eneity.ShapeBase;
 import com.march.factory.impl.StandardShapeFactory;
 
@@ -104,10 +103,23 @@ public class ShapeComposite extends ShapeBase {
     }
 
     @Override
+    public void setFilled(boolean filled) {
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.setFilled(filled);
+        }
+    }
+
+    @Override
     public void setLineColor(Color lineColor) {
-        super.setLineColor(lineColor);
         for (ShapeBase shapeBase : shapeBaseList) {
             shapeBase.setLineColor(lineColor);
+        }
+    }
+
+    @Override
+    public void setFillColor(Color fillColor) {
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.setFillColor(fillColor);
         }
     }
 

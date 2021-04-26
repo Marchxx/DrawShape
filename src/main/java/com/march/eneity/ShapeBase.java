@@ -36,12 +36,20 @@ public abstract class ShapeBase {
         this.checked = checked;
     }
 
-    public Color getLineColor() {
-        return lineColor;
+    public void setFilled(boolean filled) {
+        isFilled = filled;
+    }
+
+    public boolean isFilled() {
+        return isFilled;
     }
 
     public void setLineColor(Color lineColor) {
         this.lineColor = lineColor;
+    }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
     }
 
     public ShapeBase(String name) {
@@ -81,15 +89,21 @@ public abstract class ShapeBase {
 
 
     /**
-     * 根据选中状态调整画笔属性
+     * 根据选中状态和填充状态调整画笔属性
      */
     public Graphics2D adjustBrush(Graphics2D g2d) {
         if (isChecked()) {
+            //1.判断是否选中，若选中则画笔设为红色
             g2d.setStroke(new BasicStroke(3.5f));
             g2d.setColor(Color.red);
         } else {
-            g2d.setStroke(new BasicStroke(2.0f));
-            g2d.setColor(this.lineColor);
+            //2.若未选中，先判断是否填充，再判断边框
+            if (isFilled()) {
+                g2d.setColor(this.fillColor);
+            } else {
+                g2d.setStroke(new BasicStroke(2.0f));
+                g2d.setColor(this.lineColor);
+            }
         }
         return g2d;
     }

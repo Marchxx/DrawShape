@@ -69,7 +69,7 @@ public class SelectListener implements MouseListener, MouseMotionListener {
         if (!startPoint.equals(endPoint)) {
             g2d.drawRect(startPoint.x, startPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
             shapeBaseList = drawPanel.getShapeBaseList();
-            System.out.println("当前列表：" + shapeBaseList);
+            //System.out.println("当前列表：" + shapeBaseList);
             if (shapeBaseList == null)
                 return;
             //鼠标画框实现多选

@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 public class ShapeDecorator extends ShapeBase {
 
     //保存装饰的目标对象
-    public ShapeBase target;
+    protected ShapeBase target;
 
     //构造函数传入装饰对象
     public ShapeDecorator(ShapeBase shapeBase) {
@@ -32,9 +32,21 @@ public class ShapeDecorator extends ShapeBase {
     }
 
     @Override
+    public void setFilled(boolean filled) {
+        //设置目标是否填充
+        target.setFilled(filled);
+    }
+
+    @Override
     public void setLineColor(Color lineColor) {
-        super.setLineColor(lineColor);
+        //设置边框颜色
         target.setLineColor(lineColor);
+    }
+
+    @Override
+    public void setFillColor(Color fillColor) {
+        //设置填充颜色
+        target.setFillColor(fillColor);
     }
 
     @Override

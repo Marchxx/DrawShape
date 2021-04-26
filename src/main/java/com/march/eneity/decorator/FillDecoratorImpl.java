@@ -5,16 +5,17 @@ import com.march.eneity.ShapeBase;
 import java.awt.*;
 
 /**
- * 边框装饰
+ * 填充装饰
  */
-public class BorderDecoratorImpl extends ShapeDecorator {
+public class FillDecoratorImpl extends ShapeDecorator {
 
-    private Color lineColor;
+    private Color fillColor;
 
-    public BorderDecoratorImpl(ShapeBase shapeBase, Color lineColor) {
+    public FillDecoratorImpl(ShapeBase shapeBase, Color fillColor) {
         super(shapeBase);
-        this.lineColor = lineColor;
-        target.setLineColor(lineColor);
+        this.fillColor = fillColor;
+        target.setFilled(true);
+        target.setFillColor(fillColor);
     }
 
     @Override
@@ -26,6 +27,6 @@ public class BorderDecoratorImpl extends ShapeDecorator {
     public ShapeBase clone() {
         //创建一个装饰目标对象的克隆
         ShapeBase shapeBaseClone = target.clone();
-        return new BorderDecoratorImpl(shapeBaseClone, this.lineColor);
+        return new FillDecoratorImpl(shapeBaseClone, this.fillColor);
     }
 }

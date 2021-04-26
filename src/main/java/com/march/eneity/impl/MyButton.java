@@ -35,7 +35,7 @@ public class MyButton extends ShapeBase {
         if (isChecked()) {
             button.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
         } else {
-            //button.setBorder(BorderFactory.createEtchedBorder());
+            //button.setBorder(BorderFactory.createEtchedBorder());//默认样式
             button.setBorder(BorderFactory.createLineBorder(this.lineColor, 3));
         }
     }
