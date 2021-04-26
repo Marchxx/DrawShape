@@ -23,13 +23,10 @@ public class DrawFrame extends JFrame {
         JPanel mainPanel = createMainPanel();
         setContentPane(mainPanel);
         setVisible(true);
-
-        // 获取右侧面板的画笔：必须在setVisible(true)后调用
-        Graphics g = jPanelCenter.getGraphics();
-        //设置 画图面板和画笔
-        CreateListener.setProperties(jPanelCenter, (Graphics2D) g);
-        CopyListener.setProperties(jPanelCenter, (Graphics2D) g);
-        SelectListener.setProperties(jPanelCenter, (Graphics2D) g);
+        //设置画图面板，用来给监听器获取右侧面板的画笔：必须在setVisible(true)后调用
+        CreateListener.setProperties(jPanelCenter);
+        CopyListener.setProperties(jPanelCenter);
+        SelectListener.setProperties(jPanelCenter);
         MoveListener.setProperties(jPanelCenter);
         CompositeListener.setProperties(jPanelCenter);
     }
@@ -57,6 +54,7 @@ public class DrawFrame extends JFrame {
         tabbedPane.addTab("绘制图形", drawJToolBar.getDrawJToolBar()); //设置菜单2
         tabbedPane.addTab("移动图形", drawJToolBar.getMoveJToolBar()); //设置菜单3
         tabbedPane.addTab("基本操作", drawJToolBar.getEditJToolBar()); //设置菜单4
+        tabbedPane.addTab("调整样式", drawJToolBar.getDecorateJToolBar()); //设置菜单5
         jPanelUp.add(tabbedPane, FlowLayout.LEFT);
         //设置默认选中的选项卡
         tabbedPane.setSelectedIndex(1);

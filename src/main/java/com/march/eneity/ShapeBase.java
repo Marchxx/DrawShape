@@ -1,5 +1,7 @@
 package com.march.eneity;
 
+import com.march.eneity.composite.ShapeComposite;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -10,10 +12,13 @@ public abstract class ShapeBase {
 
     private String name;//图形名称
     private boolean checked = false;//选中标记
+    private boolean isFilled = false;//填充标记
 
     //设置为protected，不同包的子类能够访问
     protected int deltaX = 0;//x轴偏移
     protected int deltaY = 0;//y轴偏移
+    protected Color lineColor = Color.BLACK;//线条颜色，默认为黑色
+    protected Color fillColor = Color.WHITE;//填充颜色，默认为白色
 
     public String getName() {
         return name;
@@ -29,6 +34,14 @@ public abstract class ShapeBase {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    public Color getLineColor() {
+        return lineColor;
+    }
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
     }
 
     public ShapeBase(String name) {
@@ -76,7 +89,7 @@ public abstract class ShapeBase {
             g2d.setColor(Color.red);
         } else {
             g2d.setStroke(new BasicStroke(2.0f));
-            g2d.setColor(Color.BLACK);
+            g2d.setColor(this.lineColor);
         }
         return g2d;
     }

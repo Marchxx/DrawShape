@@ -18,7 +18,7 @@ public class CreateListener implements ActionListener {
 
 
     private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
-    private Graphics2D g2d;//画笔对象，主窗体传入
+    private Graphics2D g2d;//通过drawPanel获取
     private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
 
     public static final CreateListener singletonCreateListener = new CreateListener();
@@ -26,9 +26,9 @@ public class CreateListener implements ActionListener {
     private CreateListener() {
     }
 
-    public static void setProperties(DrawPanel drawPanel, Graphics2D g2d) {
+    public static void setProperties(DrawPanel drawPanel) {
         singletonCreateListener.drawPanel = drawPanel;
-        singletonCreateListener.g2d = g2d;
+        singletonCreateListener.g2d = (Graphics2D) drawPanel.getGraphics();
     }
 
     public void actionPerformed(ActionEvent e) {

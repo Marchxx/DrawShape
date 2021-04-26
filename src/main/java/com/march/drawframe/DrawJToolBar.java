@@ -1,7 +1,7 @@
 package com.march.drawframe;
 
 import com.march.eneity.ShapeBase;
-import com.march.eneity.impl.MyButton;
+import com.march.eneity.decorator.BorderDecoratorImpl;
 import com.march.listener.CompositeListener;
 import com.march.listener.CopyListener;
 import com.march.listener.CreateListener;
@@ -37,7 +37,7 @@ public class DrawJToolBar {
     public JToolBar getNewToolBar() {
         JToolBar toolBar = new JToolBar();
         toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        toolBar.setPreferredSize(new Dimension(1900, 50));
+        toolBar.setPreferredSize(new Dimension(1900, 100));
         return toolBar;
     }
 
@@ -49,6 +49,16 @@ public class DrawJToolBar {
         jButton.setFont(new Font("黑体", Font.PLAIN, 20));
         jButton.setPreferredSize(new Dimension(100, 30));
         return jButton;
+    }
+
+    /**
+     * 统一调整标签样式
+     */
+    public JLabel getNewLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("黑体", Font.PLAIN, 20));
+        label.setPreferredSize(new Dimension(100, 30));
+        return label;
     }
 
 
@@ -145,6 +155,42 @@ public class DrawJToolBar {
             }
         });
         toolBar.add(buttonClickClear);
+        return toolBar;
+    }
+
+    public JToolBar getDecorateJToolBar() {
+        //设置菜单5
+
+        //边框颜色
+        JToolBar toolBar = getNewToolBar();
+        JLabel jLabel = getNewLabel("边框颜色：");
+        toolBar.add(jLabel);
+        Color[] colorArray = {
+                Color.red, Color.green, Color.blue,
+                Color.BLACK, Color.cyan, Color.gray,
+                Color.magenta, Color.ORANGE, Color.pink
+        };
+        for (int i = 0; i < colorArray.length; i++) {
+            JButton borderDecorate = new JButton();
+            borderDecorate.setPreferredSize(new Dimension(30, 30));
+            borderDecorate.setBackground(colorArray[i]);
+            int index = i;
+            borderDecorate.addActionListener((e) -> {
+                List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
+                for (int j = 0; j < shapeBaseList.size(); j++) {
+                    if (shapeBaseList.get(j).isChecked()) {
+                        //将选中对象的引用指向装饰对象
+                        shapeBaseList.set(j, new BorderDecoratorImpl(shapeBaseList.get(j), colorArray[index]));
+                    }
+                }
+                jPanelCenter.repaint();
+            });
+            toolBar.add(borderDecorate);
+        }
+
+        //加粗变细
+
+
         return toolBar;
     }
 

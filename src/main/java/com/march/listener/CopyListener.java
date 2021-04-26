@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class CopyListener implements ActionListener {
 
-    private Graphics2D g2d;//画笔对象，主窗体传入
+    private Graphics2D g2d;//通过drawPanel获取
     private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
     private List<ShapeBase> shapeBaseList = null;//通过drawPanel获取
 
@@ -22,9 +22,9 @@ public class CopyListener implements ActionListener {
     private CopyListener() {
     }
 
-    public static void setProperties(DrawPanel drawPanel, Graphics2D g2d) {
+    public static void setProperties(DrawPanel drawPanel) {
         singletonCopyListener.drawPanel = drawPanel;
-        singletonCopyListener.g2d = g2d;
+        singletonCopyListener.g2d = (Graphics2D) drawPanel.getGraphics();
     }
 
     @Override

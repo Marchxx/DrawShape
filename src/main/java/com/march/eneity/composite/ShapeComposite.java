@@ -1,7 +1,8 @@
-package com.march.eneity;
+package com.march.eneity.composite;
 
 
-import com.march.factory.ShapeFactory;
+
+import com.march.eneity.ShapeBase;
 import com.march.factory.impl.StandardShapeFactory;
 
 import java.awt.*;
@@ -99,6 +100,14 @@ public class ShapeComposite extends ShapeBase {
         for (ShapeBase shapeBase : shapeBaseList) {
             //2.设置所有叶子结点都选中
             shapeBase.setChecked(checked);
+        }
+    }
+
+    @Override
+    public void setLineColor(Color lineColor) {
+        super.setLineColor(lineColor);
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.setLineColor(lineColor);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.march.factory.impl;
 
 import com.march.eneity.ShapeBase;
-import com.march.eneity.ShapeComposite;
+import com.march.eneity.composite.ShapeComposite;
 import com.march.eneity.impl.Circle;
 import com.march.eneity.impl.Line;
 import com.march.eneity.impl.MyButton;
@@ -9,7 +9,6 @@ import com.march.eneity.impl.Rectangle;
 import com.march.factory.ShapeFactory;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * 具体类：生产标准的图形工厂

@@ -2,7 +2,7 @@ package com.march.listener;
 
 import com.march.drawframe.DrawPanel;
 import com.march.eneity.ShapeBase;
-import com.march.eneity.ShapeComposite;
+import com.march.eneity.composite.ShapeComposite;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ import java.util.List;
 public class SelectListener implements MouseListener, MouseMotionListener {
 
     private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
-    private Graphics2D g2d;//画笔对象，主窗体传入
+    private Graphics2D g2d;//通过drawPanel获取
     private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
     private Point startPoint = new Point();//鼠标选框左上角坐标
     private Point endPoint = new Point();//鼠标选框右下角坐标
@@ -27,8 +27,12 @@ public class SelectListener implements MouseListener, MouseMotionListener {
     private SelectListener() {
     }
 
-    public static void setProperties(DrawPanel drawPanel, Graphics2D g2d) {
+    public static void setProperties(DrawPanel drawPanel) {
         singletonSelectListener.drawPanel = drawPanel;
+        //获取面板的画笔并设置
+        Graphics2D g2d = (Graphics2D) drawPanel.getGraphics();
+        g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f, new float[]{10, 10, 10}, 0));
+        g2d.setColor(Color.blue);
         singletonSelectListener.g2d = g2d;
     }
 
@@ -53,8 +57,7 @@ public class SelectListener implements MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent e) {
         startPoint.x = e.getX();
         startPoint.y = e.getY();
-        g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f, new float[]{10, 10, 10}, 0));
-        g2d.setColor(Color.blue);
+
     }
 
 
@@ -66,7 +69,7 @@ public class SelectListener implements MouseListener, MouseMotionListener {
         if (!startPoint.equals(endPoint)) {
             g2d.drawRect(startPoint.x, startPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
             shapeBaseList = drawPanel.getShapeBaseList();
-            //System.out.println("当前列表：" + shapeBaseList);
+            System.out.println("当前列表：" + shapeBaseList);
             if (shapeBaseList == null)
                 return;
             //鼠标画框实现多选
