@@ -89,21 +89,16 @@ public abstract class ShapeBase {
 
 
     /**
-     * 根据选中状态和填充状态调整画笔属性
+     * 根据选中状态调整画笔属性，设置边框颜色
      */
     public Graphics2D adjustBrush(Graphics2D g2d) {
         if (isChecked()) {
-            //1.判断是否选中，若选中则画笔设为红色
-            g2d.setStroke(new BasicStroke(3.5f));
-            g2d.setColor(Color.red);
+            //若选中则画笔设为红色
+            g2d.setStroke(new BasicStroke(4.0f));
+            g2d.setColor(Color.RED);
         } else {
-            //2.若未选中，先判断是否填充，再判断边框
-            if (isFilled()) {
-                g2d.setColor(this.fillColor);
-            } else {
-                g2d.setStroke(new BasicStroke(2.0f));
-                g2d.setColor(this.lineColor);
-            }
+            g2d.setStroke(new BasicStroke(3.5f));
+            g2d.setColor(this.lineColor);
         }
         return g2d;
     }

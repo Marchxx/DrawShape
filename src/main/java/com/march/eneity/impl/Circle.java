@@ -22,12 +22,12 @@ public class Circle extends ShapeBase {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d = this.adjustBrush(g2d);
         if (isFilled()) {
+            g2d.setColor(this.fillColor);
             g2d.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
-        } else {
-            g2d.drawOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
         }
+        g2d = this.adjustBrush(g2d);
+        g2d.drawOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
     }
 
     @Override

@@ -33,12 +33,12 @@ public class Rectangle extends ShapeBase {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d = this.adjustBrush(g2d);
         if (isFilled()) {
+            g2d.setColor(this.fillColor);
             g2d.fillRect(leftUpX, leftUpY, width, height);
-        } else {
-            g2d.drawRect(leftUpX, leftUpY, width, height);
         }
+        g2d = this.adjustBrush(g2d);
+        g2d.drawRect(leftUpX, leftUpY, width, height);
     }
 
     @Override
