@@ -3,6 +3,7 @@ package com.march.listener;
 import com.march.drawframe.DrawPanel;
 import com.march.eneity.ShapeBase;
 import com.march.eneity.composite.ShapeComposite;
+import com.march.eneity.decorator.ShapeDecorator;
 import com.march.factory.ShapeFactory;
 import com.march.factory.impl.StandardShapeFactory;
 
@@ -65,12 +66,24 @@ public class CompositeListener implements ActionListener {
         shapeBaseList = drawPanel.getShapeBaseList();
         for (int i = 0; i < shapeBaseList.size(); i++) {
             ShapeBase shapeBase = shapeBaseList.get(i);
-            if (shapeBase.getComposite() != null) {
-                ShapeComposite composite = shapeBase.getComposite();
-                //1.判断组合对象是否被选中
-                if (shapeBase.isChecked()) {
-                    //2.在列表中删除组合，并将其叶子加入列表
-                    shapeBaseList.remove(composite);
+            if (shapeBase.isChecked()) {
+                boolean flag = false;//标记是否为装饰对象
+                ShapeBase oldDecorator = shapeBase;//保存列表中原装饰对象的引用
+                //1.判断是否为装饰对象，取出装饰对象的最外层target
+                if (shapeBase.getDecorator() != null) {
+                    flag = true;
+                }
+                while (shapeBase.getDecorator() != null) {
+                    ShapeDecorator shapeDecorator = shapeBase.getDecorator();
+                    shapeBase = shapeDecorator.getTarget();
+                }
+                //2.判断是否为组合对象，解除组合
+                if (shapeBase.getComposite() != null) {
+                    ShapeComposite composite = shapeBase.getComposite();
+                    if (flag)//若为装饰后的组合对象，删除装饰的引用
+                        shapeBaseList.remove(oldDecorator);
+                    else
+                        shapeBaseList.remove(composite);
                     shapeBaseList.addAll(composite.getChildren());
                     break;
                 }

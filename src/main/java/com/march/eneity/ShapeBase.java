@@ -1,6 +1,7 @@
 package com.march.eneity;
 
 import com.march.eneity.composite.ShapeComposite;
+import com.march.eneity.decorator.ShapeDecorator;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -87,6 +88,12 @@ public abstract class ShapeBase {
         return null;
     }
 
+    /**
+     * 解耦：基类默认返回null，装饰对象返回this。避免程序运行时动态判断基类引用对应的实现类
+     */
+    public ShapeDecorator getDecorator() {
+        return null;
+    }
 
     /**
      * 根据选中状态调整画笔属性，设置边框颜色

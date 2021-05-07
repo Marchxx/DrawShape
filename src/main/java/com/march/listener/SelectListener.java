@@ -3,6 +3,7 @@ package com.march.listener;
 import com.march.drawframe.DrawPanel;
 import com.march.eneity.ShapeBase;
 import com.march.eneity.composite.ShapeComposite;
+import com.march.eneity.decorator.ShapeDecorator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,14 +121,17 @@ public class SelectListener implements MouseListener, MouseMotionListener {
         for (ShapeBase shapeBase : shapeBaseList) {
             if (shapeBase.isSelected(e.getX(), e.getY(), e)) {
                 shapeBase.setChecked(true);
-
+                //若选中装饰对象，取出最外层target
+                while (shapeBase.getDecorator() != null) {
+                    ShapeDecorator shapeDecorator = shapeBase.getDecorator();
+                    shapeBase = shapeDecorator.getTarget();
+                }
                 //若选中组合对象，显示消息
                 if (shapeBase.getComposite() != null) {
                     ShapeComposite composite = shapeBase.getComposite();
                     String printAll = composite.printAll(new StringBuilder());
                     JOptionPane.showMessageDialog(drawPanel, printAll);
                 }
-
                 //判定成功直接break，若为组合对象会将其叶子全部设置
                 break;
             }

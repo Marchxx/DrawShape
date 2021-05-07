@@ -182,7 +182,7 @@ public class DrawJToolBar {
                 List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
                 for (int j = 0; j < shapeBaseList.size(); j++) {
                     if (shapeBaseList.get(j).isChecked()) {
-                        //1.创建新的装饰对象，并设置选中为true，可以连续点击增加装饰
+                        //1.创建新的装饰对象，并设置选中为true可以连续点击增加装饰
                         BorderDecoratorImpl borderDecorator = new BorderDecoratorImpl(shapeBaseList.get(j), colorArray[index]);
                         borderDecorator.setChecked(true);
                         //2.将选中对象的引用指向装饰对象
@@ -206,7 +206,7 @@ public class DrawJToolBar {
                 List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
                 for (int j = 0; j < shapeBaseList.size(); j++) {
                     if (shapeBaseList.get(j).isChecked()) {
-                        //1.创建新的装饰对象，并设置选中为true，可以连续点击增加装饰
+                        //1.创建新的装饰对象，设置选中为true可以连续点击增加装饰
                         FillDecoratorImpl fillDecorator = new FillDecoratorImpl(shapeBaseList.get(j), colorArray[index]);
                         fillDecorator.setChecked(true);
                         //2.将选中对象的引用指向装饰对象

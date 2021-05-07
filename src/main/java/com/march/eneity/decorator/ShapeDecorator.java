@@ -1,6 +1,7 @@
 package com.march.eneity.decorator;
 
 import com.march.eneity.ShapeBase;
+import com.march.eneity.composite.ShapeComposite;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -69,4 +70,13 @@ public class ShapeDecorator extends ShapeBase {
         return target.clone();
     }
 
+    @Override
+    public void clearShape() {
+        target.clearShape();
+    }
+
+    @Override
+    public ShapeDecorator getDecorator() {
+        return this;
+    }
 }
