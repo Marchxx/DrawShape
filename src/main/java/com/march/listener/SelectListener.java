@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -20,8 +21,12 @@ public class SelectListener implements MouseListener, MouseMotionListener {
     private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
     private Graphics2D g2d;//通过drawPanel获取
     private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
-    private Point startPoint = new Point();//鼠标选框左上角坐标
-    private Point endPoint = new Point();//鼠标选框右下角坐标
+
+    //绘制选框矩形
+    private Point startPoint = new Point();//鼠标选框绘制起点坐标
+    private Point endPoint = new Point();//鼠标选框绘制终点坐标
+    private Point drawStartPoint = new Point();//绘图起点坐标
+    private boolean mouseDownFlag = false;//鼠标按下标识：按下为true
 
     public static final SelectListener singletonSelectListener = new SelectListener();
 
@@ -58,7 +63,7 @@ public class SelectListener implements MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent e) {
         startPoint.x = e.getX();
         startPoint.y = e.getY();
-
+        mouseDownFlag = true;
     }
 
 
@@ -68,14 +73,14 @@ public class SelectListener implements MouseListener, MouseMotionListener {
         endPoint.y = e.getY();
         //与单选进行区分
         if (!startPoint.equals(endPoint)) {
-            g2d.drawRect(startPoint.x, startPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
+            //g2d.drawRect(drawStartPoint.x, drawStartPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
             shapeBaseList = drawPanel.getShapeBaseList();
             //System.out.println("当前列表：" + shapeBaseList);
             if (shapeBaseList == null)
                 return;
             //鼠标画框实现多选
             cancelSelected();
-            multiSelect(startPoint, endPoint, e);
+            multiSelect(drawStartPoint, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y), e);
             drawPanel.repaint();
         }
     }
@@ -92,16 +97,18 @@ public class SelectListener implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        //重置画板，防止绘制的矩形重叠
-        drawPanel.repaint();
+        //防止绘制的矩形重叠，repaint()不会立即执行，调用它后会有一个等待处理的过程
+        drawPanel.paintImmediately(0, 0, 1920, 1080);
         endPoint.x = e.getX();
         endPoint.y = e.getY();
-        g2d.drawRect(startPoint.x, startPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
+        //计算绘制矩形的起点坐标
+        drawStartPoint.x = Math.min(startPoint.x, endPoint.x);
+        drawStartPoint.y = Math.min(startPoint.y, endPoint.y);
+        g2d.drawRect(drawStartPoint.x, drawStartPoint.y, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
     }
 
     /**
@@ -121,6 +128,7 @@ public class SelectListener implements MouseListener, MouseMotionListener {
         for (ShapeBase shapeBase : shapeBaseList) {
             if (shapeBase.isSelected(e.getX(), e.getY(), e)) {
                 shapeBase.setChecked(true);
+
                 //若选中装饰对象，取出最外层target
                 while (shapeBase.getDecorator() != null) {
                     ShapeDecorator shapeDecorator = shapeBase.getDecorator();
@@ -132,25 +140,23 @@ public class SelectListener implements MouseListener, MouseMotionListener {
                     String printAll = composite.printAll(new StringBuilder());
                     JOptionPane.showMessageDialog(drawPanel, printAll);
                 }
-                //判定成功直接break，若为组合对象会将其叶子全部设置
+
+                //判定成功直接break
                 break;
             }
         }
     }
 
     /**
-     * 根据鼠标画出矩形的起点、终点坐标，判断多个图形选中
-     *
-     * @param startPoint
-     * @param endPoint
+     * 判断多个图形选中
      */
-    private void multiSelect(Point startPoint, Point endPoint, MouseEvent e) {
+    private void multiSelect(Point drawStartPoint, Integer width, Integer height, MouseEvent e) {
         //1.遍历图形集合
         for (ShapeBase shapeBase : shapeBaseList) {
             //2.遍历所有坐标点
-            for (int x = startPoint.x; x <= endPoint.x; x++) {
+            for (int x = drawStartPoint.x; x <= drawStartPoint.x + width; x++) {
                 boolean flag = false;
-                for (int y = startPoint.y; y <= endPoint.y; y++) {
+                for (int y = drawStartPoint.y; y <= drawStartPoint.y + height; y++) {
                     if (shapeBase.isSelected(x, y, e)) {
                         shapeBase.setChecked(true);
                         flag = true;
