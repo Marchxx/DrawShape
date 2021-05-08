@@ -8,7 +8,7 @@ import java.awt.*;
 public class DrawFrame extends JFrame {
 
     //鼠标监听器的单例对象,传递给画图面板
-    private SelectListener selectListener = SelectListener.singletonSelectListener;
+    private MouseListener mouseListener = MouseListener.singletonMouseListener;
     //中心画图面板
     private DrawPanel jPanelCenter = null;
 
@@ -26,7 +26,7 @@ public class DrawFrame extends JFrame {
         //设置画图面板，用来给监听器获取右侧面板的画笔：必须在setVisible(true)后调用
         CreateListener.setProperties(jPanelCenter);
         CopyListener.setProperties(jPanelCenter);
-        SelectListener.setProperties(jPanelCenter);
+        MouseListener.setProperties(jPanelCenter);
         MoveListener.setProperties(jPanelCenter);
         CompositeListener.setProperties(jPanelCenter);
     }
@@ -74,8 +74,8 @@ public class DrawFrame extends JFrame {
         jPanelCenter.setBackground(Color.white);
         jPanelCenter.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         //右侧画图面板添加判断选中监听器
-        jPanelCenter.addMouseListener(selectListener);
-        jPanelCenter.addMouseMotionListener(selectListener);
+        jPanelCenter.addMouseListener(mouseListener);
+        jPanelCenter.addMouseMotionListener(mouseListener);
 
         //3.5菜单选项卡中传递画图面板的引用，用来操作页面
         drawJToolBar.setjPanelCenter(jPanelCenter);

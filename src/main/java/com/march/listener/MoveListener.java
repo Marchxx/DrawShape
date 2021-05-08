@@ -40,19 +40,20 @@ public class MoveListener implements ActionListener {
     }
 
     public void move(ShapeBase shapeBase, String operation) {
-        //1.根据按钮点击，执行对象
+        //1.根据按钮点击进行移动，默认移动距离为10
+        int distance = 10;
         switch (operation) {
             case "左移":
-                shapeBase.move("left");
+                shapeBase.move(-1 * distance, 0);
                 break;
             case "右移":
-                shapeBase.move("right");
+                shapeBase.move(distance, 0);
                 break;
             case "上移":
-                shapeBase.move("top");
+                shapeBase.move(0, -1 * distance);
                 break;
             case "下移":
-                shapeBase.move("down");
+                shapeBase.move(0, distance);
                 break;
         }
     }

@@ -24,10 +24,7 @@ public class Rectangle extends ShapeBase {
     }
 
     @Override
-    public void move(String operation) {
-        this.deltaX = 0;
-        this.deltaY = 0;
-        calculateDelta(operation);
+    public void move(int deltaX, int deltaY) {
         leftUpX += deltaX;
         leftUpY += deltaY;
     }

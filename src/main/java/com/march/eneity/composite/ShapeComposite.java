@@ -61,9 +61,9 @@ public class ShapeComposite extends ShapeBase {
     }
 
     @Override
-    public void move(String operation) {
+    public void move(int deltaX, int deltaY) {
         for (ShapeBase shapeBase : shapeBaseList) {
-            shapeBase.move(operation);
+            shapeBase.move(deltaX, deltaY);
         }
     }
 

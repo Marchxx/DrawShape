@@ -1,7 +1,7 @@
 package com.march.eneity.impl;
 
 import com.march.eneity.ShapeBase;
-import com.march.listener.SelectListener;
+import com.march.listener.MouseListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class MyButton extends ShapeBase {
         button.setFont(new Font("黑体", Font.PLAIN, 20));
         button.setBounds(leftUpX, leftUpY, 150, 30);
         //1.2按钮添加单例的选中监听器
-        button.addMouseListener(SelectListener.singletonSelectListener);
+        button.addMouseListener(MouseListener.singletonMouseListener);
         this.drawPanel = drawPanel;
     }
 
@@ -41,10 +41,7 @@ public class MyButton extends ShapeBase {
     }
 
     @Override
-    public void move(String operation) {
-        this.deltaX = 0;
-        this.deltaY = 0;
-        calculateDelta(operation);
+    public void move(int deltaX, int deltaY) {
         button.setLocation(button.getX() + deltaX, button.getY() + deltaY);
     }
 

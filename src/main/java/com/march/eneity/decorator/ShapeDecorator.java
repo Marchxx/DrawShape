@@ -56,8 +56,8 @@ public class ShapeDecorator extends ShapeBase {
     }
 
     @Override
-    public void move(String operation) {
-        target.move(operation);
+    public void move(int deltaX, int deltaY) {
+        target.move(deltaX, deltaY);
     }
 
     @Override
