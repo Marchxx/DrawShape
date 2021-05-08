@@ -35,7 +35,7 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
         //获取面板的画笔并设置
         Graphics2D g2d = (Graphics2D) drawPanel.getGraphics();
         g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f, new float[]{10, 10, 10}, 0));
-        g2d.setColor(Color.blue);
+        g2d.setColor(Color.BLUE);
         singletonMouseListener.g2d = g2d;
     }
 

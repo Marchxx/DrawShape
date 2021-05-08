@@ -26,6 +26,6 @@ public class BorderDecoratorImpl extends ShapeDecorator {
     public ShapeBase clone() {
         //创建一个装饰目标对象的克隆
         ShapeBase shapeBaseClone = target.clone();
-        return new BorderDecoratorImpl(shapeBaseClone, this.lineColor);
+        return new BorderDecoratorImpl(shapeBaseClone, target.getLineColor());
     }
 }

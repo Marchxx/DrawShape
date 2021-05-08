@@ -50,6 +50,14 @@ public abstract class ShapeBase {
         this.fillColor = fillColor;
     }
 
+    public Color getLineColor() {
+        return lineColor;
+    }
+
+    public Color getFillColor() {
+        return fillColor;
+    }
+
     public ShapeBase(String name) {
         this.name = name;
     }
