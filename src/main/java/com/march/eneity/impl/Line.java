@@ -10,15 +10,11 @@ import java.awt.event.MouseEvent;
  */
 public class Line extends ShapeBase {
 
-    private int startX;//起点横坐标
-    private int startY;//起点纵坐标
     private int endX;//终点横坐标
     private int endY;//终点纵坐标
 
     public Line(String name, int startX, int startY, int endX, int endY) {
-        super(name);
-        this.startX = startX;
-        this.startY = startY;
+        super(name, startX, startY);
         this.endX = endX;
         this.endY = endY;
     }
@@ -26,7 +22,7 @@ public class Line extends ShapeBase {
     @Override
     public void draw(Graphics2D g2d) {
         g2d = this.adjustBrush(g2d);
-        g2d.drawLine(startX, startY, endX, endY);
+        g2d.drawLine(this.startX, this.startY, endX, endY);
     }
 
     @Override
@@ -40,8 +36,8 @@ public class Line extends ShapeBase {
 
     @Override
     public void move(int deltaX, int deltaY) {
-        startX += deltaX;
-        startY += deltaY;
+        this.startX += deltaX;
+        this.startY += deltaY;
         endX += deltaX;
         endY += deltaY;
     }

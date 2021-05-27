@@ -14,6 +14,15 @@ public class DrawFrame extends JFrame {
 
 
     public DrawFrame() {
+        //修改界面风格为默认windows风格
+        String lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+        try {
+            UIManager.setLookAndFeel(lookAndFeel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SwingUtilities.updateComponentTreeUI(this);
+
         //设置顶层窗体Frame属性值：标题、大小、显示位置、关闭操作、可见。
         setTitle("Java绘图板");
         setSize(1920, 1080);
@@ -29,6 +38,7 @@ public class DrawFrame extends JFrame {
         MouseListener.setProperties(jPanelCenter);
         MoveListener.setProperties(jPanelCenter);
         CompositeListener.setProperties(jPanelCenter);
+        DateAccessListener.setProperties(jPanelCenter);
     }
 
     /**

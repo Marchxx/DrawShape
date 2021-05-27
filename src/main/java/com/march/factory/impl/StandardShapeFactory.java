@@ -27,8 +27,8 @@ public class StandardShapeFactory implements ShapeFactory {
     }
 
     @Override
-    public ShapeBase createCircle(String name, int centerX, int centerY, int radius) {
-        return new Circle(name, centerX, centerY, radius);
+    public ShapeBase createCircle(String name, int startX, int startY, int radius) {
+        return new Circle(name, startX, startY, radius);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class StandardShapeFactory implements ShapeFactory {
     }
 
     @Override
-    public ShapeBase createRectangle(String name, int leftUpX, int leftUpY, int width, int height) {
-        return new Rectangle(name, leftUpX, leftUpY, width, height);
+    public ShapeBase createRectangle(String name, int startX, int startY, int width, int height) {
+        return new Rectangle(name, startX, startY, width, height);
     }
 
     @Override
-    public ShapeBase createButton(String name, int leftUpX, int leftUpY, JPanel drawPanel) {
-        return new MyButton(name, leftUpX, leftUpY, drawPanel);
+    public ShapeBase createButton(String name, int startX, int startY, JPanel drawPanel) {
+        return new MyButton(name, startX, startY, drawPanel);
     }
 
     @Override

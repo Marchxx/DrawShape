@@ -10,45 +10,41 @@ import java.awt.event.MouseEvent;
  */
 public class Circle extends ShapeBase {
 
-    private int centerX;//圆心x轴坐标
-    private int centerY;//圆心y轴坐标
     private int radius;//半径
 
-    public Circle(String name, int centerX, int centerY, int radius) {
-        super(name);
-        this.centerX = centerX;
-        this.centerY = centerY;
+    public Circle(String name, int startX, int startY, int radius) {
+        super(name, startX, startY);
         this.radius = radius;
     }
 
     public void draw(Graphics2D g2d) {
         if (isFilled()) {
             g2d.setColor(this.fillColor);
-            g2d.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+            g2d.fillOval(this.startX, this.startY, radius * 2, radius * 2);
         }
         g2d = this.adjustBrush(g2d);
-        g2d.drawOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+        g2d.drawOval(this.startX, this.startY, radius * 2, radius * 2);
     }
 
     @Override
     public ShapeBase clone() {
         return new Circle(this.getName(),
-                this.centerX + 50,
-                this.centerY,
+                this.startX + 50,
+                this.startY,
                 this.radius);
     }
 
     @Override
     public void move(int deltaX, int deltaY) {
-        centerX += deltaX;
-        centerY += deltaY;
+        this.startX += deltaX;
+        this.startY += deltaY;
     }
 
     @Override
     public boolean isSelected(int x, int y, MouseEvent e) {
         //计算(x,y)到圆心的距离
-        double X = Math.pow(x - centerX, 2);
-        double Y = Math.pow(y - centerY, 2);
+        double X = Math.pow(x - (this.startX + radius), 2);
+        double Y = Math.pow(y - (this.startY + radius), 2);
         double distance = Math.sqrt(X + Y);
         return distance <= radius + 10;
     }

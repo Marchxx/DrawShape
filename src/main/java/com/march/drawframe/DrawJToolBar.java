@@ -3,10 +3,8 @@ package com.march.drawframe;
 import com.march.eneity.ShapeBase;
 import com.march.eneity.decorator.BorderDecoratorImpl;
 import com.march.eneity.decorator.FillDecoratorImpl;
-import com.march.listener.CompositeListener;
-import com.march.listener.CopyListener;
-import com.march.listener.CreateListener;
-import com.march.listener.MoveListener;
+import com.march.enums.ColorEnum;
+import com.march.listener.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,6 +64,15 @@ public class DrawJToolBar {
     public JToolBar getFileJToolBar() {
         //设置菜单1
         JToolBar toolBar = getNewToolBar();
+        //放置打开文件按钮
+        JButton fileOpen = getNewButton("打开");
+        fileOpen.addActionListener(DateAccessListener.singletonDateAccessListener);
+        toolBar.add(fileOpen);
+        //放置保存文件按钮
+        JButton fileSave = getNewButton("保存");
+        fileSave.addActionListener(DateAccessListener.singletonDateAccessListener);
+        toolBar.add(fileSave);
+        //放置关闭按钮
         JButton fileClose = getNewButton("关闭");
         fileClose.addActionListener(new ActionListener() {
             @Override
@@ -161,29 +168,23 @@ public class DrawJToolBar {
 
     public JToolBar getDecorateJToolBar() {
         //设置菜单5
+        //或者颜色枚举数组
+        ColorEnum[] colorEnums = ColorEnum.values();
 
-        //定义颜色常量数组
-        Color[] colorArray = {
-                Color.red, Color.green, Color.blue,
-                Color.BLACK, Color.cyan, Color.gray,
-                Color.magenta, Color.ORANGE, Color.pink
-        };
-
-        //边框颜色
+        //设置边框颜色
         JToolBar toolBar = getNewToolBar();
         JLabel jLabel = getNewLabel("边框颜色：");
         toolBar.add(jLabel);
-        for (int i = 0; i < colorArray.length; i++) {
+        for (ColorEnum colorEnum : colorEnums) {
             JButton borderDecorate = new JButton();
             borderDecorate.setPreferredSize(new Dimension(30, 30));
-            borderDecorate.setBackground(colorArray[i]);
-            int index = i;
+            borderDecorate.setBackground(colorEnum.getColor());
             borderDecorate.addActionListener((e) -> {
                 List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
                 for (int j = 0; j < shapeBaseList.size(); j++) {
                     if (shapeBaseList.get(j).isChecked()) {
                         //1.创建新的装饰对象，并设置选中为true可以连续点击增加装饰
-                        BorderDecoratorImpl borderDecorator = new BorderDecoratorImpl(shapeBaseList.get(j), colorArray[index]);
+                        BorderDecoratorImpl borderDecorator = new BorderDecoratorImpl(shapeBaseList.get(j), colorEnum.getColor());
                         borderDecorator.setChecked(true);
                         //2.将选中对象的引用指向装饰对象
                         shapeBaseList.set(j, borderDecorator);
@@ -197,17 +198,16 @@ public class DrawJToolBar {
         //填充颜色
         JLabel jLabel1 = getNewLabel("填充颜色：");
         toolBar.add(jLabel1);
-        for (int i = 0; i < colorArray.length; i++) {
+        for (ColorEnum colorEnum : colorEnums) {
             JButton centerFill = new JButton();
             centerFill.setPreferredSize(new Dimension(30, 30));
-            centerFill.setBackground(colorArray[i]);
-            int index = i;
+            centerFill.setBackground(colorEnum.getColor());
             centerFill.addActionListener((e) -> {
                 List<ShapeBase> shapeBaseList = jPanelCenter.getShapeBaseList();
                 for (int j = 0; j < shapeBaseList.size(); j++) {
                     if (shapeBaseList.get(j).isChecked()) {
                         //1.创建新的装饰对象，设置选中为true可以连续点击增加装饰
-                        FillDecoratorImpl fillDecorator = new FillDecoratorImpl(shapeBaseList.get(j), colorArray[index]);
+                        FillDecoratorImpl fillDecorator = new FillDecoratorImpl(shapeBaseList.get(j), colorEnum.getColor());
                         fillDecorator.setChecked(true);
                         //2.将选中对象的引用指向装饰对象
                         shapeBaseList.set(j, fillDecorator);

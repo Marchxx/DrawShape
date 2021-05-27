@@ -45,9 +45,10 @@ public class CompositeListener implements ActionListener {
     //组合
     public void composite() {
         shapeBaseList = drawPanel.getShapeBaseList();
-        //1.图形工厂对象创建组合图形
+        //1.图形工厂对象创建组合图形，获取组合对象
         ShapeFactory shapeFactory = StandardShapeFactory.shapeFactory;
-        ShapeComposite composite = (ShapeComposite) shapeFactory.createComposite("组合对象");
+        ShapeBase shapeComposite = shapeFactory.createComposite("组合对象");
+        ShapeComposite composite = shapeComposite.getComposite();
         //2.通过迭代器遍历，能够在遍历list动态删除元素
         Iterator<ShapeBase> iterator = shapeBaseList.iterator();
         while (iterator.hasNext()) {

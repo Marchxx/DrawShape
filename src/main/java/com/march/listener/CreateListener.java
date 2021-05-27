@@ -53,7 +53,7 @@ public class CreateListener implements ActionListener {
                 break;
             case "按钮":
                 //1.通过抽象工厂,创建适配JButton的MyButton对象
-                shapeBase = shapeFactory.createButton("按钮", random.nextInt(width), random.nextInt(height), drawPanel);
+                shapeBase = shapeFactory.createButton("自定义按钮", random.nextInt(width), random.nextInt(height), drawPanel);
                 //2.shapeBase向下转型为MyButton获取JButton对象
                 MyButton myButton = (MyButton) shapeBase;
                 //3.立刻添加到面板

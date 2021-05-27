@@ -11,9 +11,14 @@ import java.awt.event.MouseEvent;
  */
 public abstract class ShapeBase {
 
+    private String id;
     private String name;//图形名称
+
+    protected int startX;//起点横坐标
+    protected int startY;//起点纵坐标
+
     private boolean checked = false;//选中标记
-    private boolean isFilled = false;//填充标记
+    private boolean filled = false;//填充标记
 
     protected Color lineColor = Color.BLACK;//线条颜色，默认为黑色
     protected Color fillColor = Color.WHITE;//填充颜色，默认为白色
@@ -34,12 +39,12 @@ public abstract class ShapeBase {
         this.checked = checked;
     }
 
-    public void setFilled(boolean filled) {
-        isFilled = filled;
+    public boolean isFilled() {
+        return this.filled;
     }
 
-    public boolean isFilled() {
-        return isFilled;
+    public void setFilled(boolean filled) {
+        this.filled = filled;
     }
 
     public void setLineColor(Color lineColor) {
@@ -62,6 +67,11 @@ public abstract class ShapeBase {
         this.name = name;
     }
 
+    public ShapeBase(String name, int startX, int startY) {
+        this.name = name;
+        this.startX = startX;
+        this.startY = startY;
+    }
 
     //抽象方法：绘图，参数为面板的画笔对象
     public abstract void draw(Graphics2D g2d);

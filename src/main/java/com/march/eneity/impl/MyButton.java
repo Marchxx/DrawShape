@@ -15,12 +15,13 @@ public class MyButton extends ShapeBase {
     private JButton button;
     private JPanel drawPanel;
 
-    public MyButton(String name, int leftUpX, int leftUpY, JPanel drawPanel) {
-        super(name);
+
+    public MyButton(String name, int startX, int startY, JPanel drawPanel) {
+        super(name, startX, startY);
         //1.1创建原生的JButton
-        button = new JButton("自定义按钮");
+        button = new JButton(name);
         button.setFont(new Font("黑体", Font.PLAIN, 20));
-        button.setBounds(leftUpX, leftUpY, 150, 30);
+        button.setBounds(startX, startY, 150, 30);
         //1.2按钮添加单例的选中监听器
         button.addMouseListener(MouseListener.singletonMouseListener);
         this.drawPanel = drawPanel;

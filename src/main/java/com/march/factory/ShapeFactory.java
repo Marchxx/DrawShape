@@ -9,13 +9,13 @@ import javax.swing.*;
  */
 public interface ShapeFactory {
 
-    ShapeBase createCircle(String name, int centerX, int centerY, int radius);
+    ShapeBase createCircle(String name, int startX, int startY, int radius);
 
     ShapeBase createLine(String name, int startX, int startY, int endX, int endY);
 
-    ShapeBase createRectangle(String name, int leftUpX, int leftUpY, int width, int height);
+    ShapeBase createRectangle(String name, int startX, int startY, int width, int height);
 
-    ShapeBase createButton(String name, int leftUpX, int leftUpY, JPanel drawPanel);
+    ShapeBase createButton(String name, int startX, int startY, JPanel drawPanel);
 
     ShapeBase createComposite(String name);
 

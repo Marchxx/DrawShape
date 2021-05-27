@@ -10,49 +10,45 @@ import java.awt.event.MouseEvent;
  */
 public class Rectangle extends ShapeBase {
 
-    private int leftUpX;//左上角x坐标
-    private int leftUpY;//左上角y坐标
     private int width;//矩形的宽
     private int height;//矩形的高
 
-    public Rectangle(String name, int leftUpX, int leftUpY, int width, int height) {
-        super(name);
-        this.leftUpX = leftUpX;
-        this.leftUpY = leftUpY;
+    public Rectangle(String name, int startX, int startY, int width, int height) {
+        super(name, startX, startY);
         this.width = width;
         this.height = height;
     }
 
     @Override
     public void move(int deltaX, int deltaY) {
-        leftUpX += deltaX;
-        leftUpY += deltaY;
+        this.startX += deltaX;
+        this.startY += deltaY;
     }
 
     public void draw(Graphics2D g2d) {
         if (isFilled()) {
             g2d.setColor(this.fillColor);
-            g2d.fillRect(leftUpX, leftUpY, width, height);
+            g2d.fillRect(this.startX, this.startY, width, height);
         }
         g2d = this.adjustBrush(g2d);
-        g2d.drawRect(leftUpX, leftUpY, width, height);
+        g2d.drawRect(this.startX, this.startY, width, height);
     }
 
     @Override
     public ShapeBase clone() {
         return new Rectangle(this.getName(),
-                this.leftUpX + 50,
-                this.leftUpY,
+                this.startX + 50,
+                this.startY,
                 this.width,
                 this.height);
     }
 
     @Override
     public boolean isSelected(int x, int y, MouseEvent e) {
-        int boundLeftX = leftUpX - 10;
-        int boundRightX = leftUpX + width + 10;
-        int boundUpY = leftUpY - 10;
-        int boundDownY = leftUpY + height + 10;
+        int boundLeftX = this.startX - 10;
+        int boundRightX = this.startX + width + 10;
+        int boundUpY = this.startY - 10;
+        int boundDownY = this.startY + height + 10;
         return x >= boundLeftX && x <= boundRightX && y >= boundUpY && y <= boundDownY;
     }
 
