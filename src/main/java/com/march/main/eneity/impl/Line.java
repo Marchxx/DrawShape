@@ -19,6 +19,12 @@ public class Line extends ShapeBase {
         this.endY = endY;
     }
 
+    public Line(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, int endX, int endY) {
+        super(name, startX, startY, checked, filled, lineColor, fillColor);
+        this.endX = endX;
+        this.endY = endY;
+    }
+
     public int getEndX() {
         return endX;
     }

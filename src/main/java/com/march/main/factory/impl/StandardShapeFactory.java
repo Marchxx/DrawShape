@@ -9,6 +9,7 @@ import com.march.main.eneity.impl.Rectangle;
 import com.march.main.factory.ShapeFactory;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * 具体类：生产标准的图形工厂
@@ -49,5 +50,25 @@ public class StandardShapeFactory implements ShapeFactory {
     @Override
     public ShapeBase createComposite(String name) {
         return new ShapeComposite(name);
+    }
+
+    @Override
+    public ShapeBase createRecoverCircle(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, int radius) {
+        return new Circle(name, startX, startY, checked, filled, lineColor, fillColor, radius);
+    }
+
+    @Override
+    public ShapeBase createRecoverLine(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, int endX, int endY) {
+        return new Line(name, startX, startY, checked, filled, lineColor, fillColor, endX, endY);
+    }
+
+    @Override
+    public ShapeBase createRecoverRectangle(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, int width, int height) {
+        return new Rectangle(name, startX, startY, checked, filled, lineColor, fillColor, width, height);
+    }
+
+    @Override
+    public ShapeBase createRecoverButton(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, JPanel drawPanel) {
+        return new MyButton(name, startX, startY, checked, filled, lineColor, fillColor, drawPanel);
     }
 }

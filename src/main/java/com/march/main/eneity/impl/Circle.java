@@ -17,6 +17,11 @@ public class Circle extends ShapeBase {
         this.radius = radius;
     }
 
+    public Circle(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, int radius) {
+        super(name, startX, startY, checked, filled, lineColor, fillColor);
+        this.radius = radius;
+    }
+
     public int getRadius() {
         return radius;
     }

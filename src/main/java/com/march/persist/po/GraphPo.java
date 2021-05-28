@@ -1,6 +1,7 @@
 package com.march.persist.po;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 图纸对象
@@ -9,8 +10,8 @@ public class GraphPo {
 
     private String id;
     private String name;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+    private Date createTime;
+    private Date updateTime;
 
     public String getId() {
         return id;
@@ -28,29 +29,28 @@ public class GraphPo {
         this.name = name;
     }
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
     @Override
     public String toString() {
-        return "Graph{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                '}';
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return "图纸名称：" + name +
+                ", 创建时间：" + sdf.format(createTime) +
+                ", 最后更新时间：" + sdf.format(updateTime)
+                ;
     }
 }

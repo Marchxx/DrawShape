@@ -3,6 +3,7 @@ package com.march.persist.service.impl;
 import com.march.common.enums.ColorEnum;
 import com.march.common.enums.ShapeEnum;
 import com.march.common.utils.UuidGenerator;
+import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
 import com.march.main.eneity.composite.ShapeComposite;
 import com.march.main.eneity.decorator.ShapeDecorator;
@@ -10,6 +11,8 @@ import com.march.main.eneity.impl.Circle;
 import com.march.main.eneity.impl.Line;
 import com.march.main.eneity.impl.MyButton;
 import com.march.main.eneity.impl.Rectangle;
+import com.march.main.factory.ShapeFactory;
+import com.march.main.factory.impl.StandardShapeFactory;
 import com.march.persist.dao.GraphDao;
 import com.march.persist.dao.ShapeBaseDao;
 import com.march.persist.dao.ShapeDao;
@@ -20,8 +23,10 @@ import com.march.persist.po.GraphPo;
 import com.march.persist.po.ShapeBasePo;
 import com.march.persist.po.ShapePo;
 import com.march.persist.service.GraphService;
+import com.march.persist.vo.ShapeInfoVo;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 public class GraphServiceImpl implements GraphService {
@@ -31,10 +36,140 @@ public class GraphServiceImpl implements GraphService {
     private ShapeBaseDao shapeBaseDao = new ShapeBaseDaoImpl();
     private ShapeDao shapeDao = new ShapeDaoImpl();
 
+    private DrawPanel drawPanel;//监听器类中设置画图面板的引用，方便创建MyButton按钮
+
+    public void setDrawPanel(DrawPanel drawPanel) {
+        this.drawPanel = drawPanel;
+    }
+
+    @Override
+    public GraphPo findOneByName(String name) {
+        return graphDao.findOneByName(name);
+    }
+
     @Override
     public List<GraphPo> findAllGraph() {
-        return null;
+        return graphDao.findAllGraph();
     }
+
+
+    //根据图纸名称打开图纸，返回图形列表
+    @Override
+    public List<ShapeBase> openGraph(String graphId) {
+        List<ShapeBase> shapeBaseList = new ArrayList<>();
+        HashMap<String, ShapeInfoVo> shapeVoMap = new HashMap<>();//存放组合节点的数据库vo字段
+        HashMap<String, ShapeBase> shapeMap = new HashMap<>();//存放实际的对象
+        //1.查询全部图形信息
+        List<ShapeInfoVo> infoVoList = shapeDao.findAllShapeInfo(graphId);
+
+        //2.遍历查询结果集，将组合节点扫描进shapeVoMap
+        for (ShapeInfoVo shapeInfoVo : infoVoList) {
+            if (shapeInfoVo.getShapetype() == 4) {
+                shapeVoMap.put(shapeInfoVo.getId(), shapeInfoVo);
+            }
+        }
+
+        //3.再次遍历扫描 处理非组合节点
+        for (ShapeInfoVo shapeInfoVo : infoVoList) {
+            //3.1 无父节点、不为组合的图形，单独创建对象并保存
+            if (shapeInfoVo.getShapetype() != 4 && shapeInfoVo.getParentid() == null) {
+                ShapeBase shapeBase = createShape(shapeInfoVo);
+                shapeBaseList.add(shapeBase);
+            } else if (shapeInfoVo.getShapetype() != 4 && shapeInfoVo.getParentid() != null) {
+                //3.2 有父节点、不为组合的图形 创建该图形、父节点并添加组合 一起加入shapeMap
+                ShapeBase shapeBase = createShape(shapeInfoVo);
+                ShapeInfoVo shapeInfoParent = shapeVoMap.get(shapeInfoVo.getParentid());
+                ShapeBase shapeParent = shapeMap.get(shapeInfoParent.getId());
+                if (shapeParent == null) {
+                    shapeParent = createShape(shapeInfoParent);
+                }
+                //3.2.1 将创建的子图形，加入到Parent中
+                ShapeComposite shapeComposite = shapeParent.getComposite();
+                shapeComposite.add(shapeBase);
+                //3.2.2 加入到shapeMap中
+                shapeMap.put(shapeInfoParent.getId(), shapeComposite);
+            }
+        }
+
+        //4.依次遍历ShapeVoMap，处理纯组合节点
+        Set<String> keySet = shapeVoMap.keySet();
+        Map<Integer, List<ShapeInfoVo>> listMap = new TreeMap<>();
+        for (String s : keySet) {
+            ShapeInfoVo shapeInfoVo = shapeVoMap.get(s);
+            //按照组合深度进行排序，将组合的叶子节点放在最前面
+            Integer depth = calcDepth(shapeVoMap, shapeInfoVo);
+            List<ShapeInfoVo> list = listMap.get(depth);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            list.add(shapeInfoVo);
+            listMap.put(depth * -1, list);//深度的负数，从treeMap中正序遍历则从小到大
+        }
+
+        //5.依次遍历第三步处理好的Map，同时修改shapeMap的结构
+        for (Integer integer : listMap.keySet()) {
+            //只处理不为0的节点
+            if (integer != 0) {
+                List<ShapeInfoVo> shapeInfoVos = listMap.get(integer);
+                for (ShapeInfoVo shapeInfoVo : shapeInfoVos) {
+                    //取出shapeMap中的父节点，将该结点加入其中并删除本身，重新put回map
+                    ShapeBase shapeBase = shapeMap.get(shapeInfoVo.getId());
+                    ShapeBase shapeParent = shapeMap.get(shapeInfoVo.getParentid());
+                    ShapeComposite composite = shapeParent.getComposite();
+                    composite.add(shapeBase);
+                    shapeMap.remove(shapeInfoVo.getId());
+                    shapeMap.put(shapeInfoVo.getParentid(), composite);
+                }
+            }
+        }
+        //6. 将shapeMap中的图形，加入shapeList
+        shapeBaseList.addAll(shapeMap.values());
+        return shapeBaseList;
+    }
+
+    //计算当前组合图形的深度
+    private Integer calcDepth(HashMap<String, ShapeInfoVo> shapeVoMap, ShapeInfoVo shapeInfoVo) {
+        int count = 0;
+        while (shapeInfoVo.getParentid() != null) {
+            count++;
+            shapeInfoVo = shapeVoMap.get(shapeInfoVo.getParentid());
+        }
+        return count;
+    }
+
+    //私有方法：恢复图形
+    private ShapeBase createShape(ShapeInfoVo shapeInfoVo) {
+        //1.获取创建恢复图形的工厂
+        ShapeFactory shapeFactory = StandardShapeFactory.shapeFactory;
+        ShapeBase result = null;
+        //2.根据图形typeId创建图形
+        String name = shapeInfoVo.getName();
+        int startX = shapeInfoVo.getStartX();
+        int startY = shapeInfoVo.getStartY();
+        boolean checked = shapeInfoVo.isChecked();
+        boolean filled = shapeInfoVo.isFilled();
+        Color lineColor = ColorEnum.getColorByCode(shapeInfoVo.getLineColor());
+        Color fillColor = ColorEnum.getColorByCode(shapeInfoVo.getFillColor());
+        switch (shapeInfoVo.getShapetype()) {
+            case 0:
+                result = shapeFactory.createRecoverCircle(name, startX, startY, checked, filled, lineColor, fillColor, shapeInfoVo.getRadius());
+                break;
+            case 1:
+                result = shapeFactory.createRecoverLine(name, startX, startY, checked, filled, lineColor, fillColor, shapeInfoVo.getEndx(), shapeInfoVo.getEndy());
+                break;
+            case 2:
+                result = shapeFactory.createRecoverButton(name, startX, startY, checked, filled, lineColor, fillColor, drawPanel);
+                break;
+            case 3:
+                result = shapeFactory.createRecoverRectangle(name, startX, startY, checked, filled, lineColor, fillColor, shapeInfoVo.getWidth(), shapeInfoVo.getHeight());
+                break;
+            case 4:
+                result = shapeFactory.createComposite(name);
+                break;
+        }
+        return result;
+    }
+
 
     //根据图形列表，保存当前图纸对象
     @Override
@@ -81,7 +216,7 @@ public class GraphServiceImpl implements GraphService {
         }
     }
 
-    //递归存储组合对象
+    //私有方法：递归存储组合对象
     private void saveComposite(List<ShapeBasePo> shapeBasePoList, List<ShapePo> shapePoList, ShapeComposite composite, String parentId) {
         //1.创建Composite对象，并将创建出的id递归传递
         ShapeBasePo shapeBaseParentPo = getShapeBasePo(composite, ShapeEnum.COMPOSITE);
@@ -111,8 +246,8 @@ public class GraphServiceImpl implements GraphService {
         }
     }
 
-    //根据shapeBase以及参数构造ShapeBasePo对象
-    public ShapeBasePo getShapeBasePo(ShapeBase shapeBase, ShapeEnum shapeEnum) {
+    //私有方法：根据shapeBase以及参数构造ShapeBasePo对象
+    private ShapeBasePo getShapeBasePo(ShapeBase shapeBase, ShapeEnum shapeEnum) {
         ShapeBasePo shapeBasePo = new ShapeBasePo();
         shapeBasePo.setId(UuidGenerator.getUuid());
         shapeBasePo.setName(shapeBase.getName());
@@ -128,8 +263,8 @@ public class GraphServiceImpl implements GraphService {
         return shapeBasePo;
     }
 
-    //根据ShapeBasePo生成的id构造ShapePo对象
-    public ShapePo getShapePo(String shapeBaseId, ShapeBase shapeBase) {
+    //私有方法：根据ShapeBasePo生成的id构造ShapePo对象
+    private ShapePo getShapePo(String shapeBaseId, ShapeBase shapeBase) {
         ShapePo shapePo = new ShapePo();
         shapePo.setId(shapeBaseId);
         //shapePo.setParentid();//无父节点，无需设置

@@ -22,6 +22,10 @@ public class DrawPanel extends JPanel {
         return shapeBaseList;
     }
 
+    public void setShapeBaseList(List<ShapeBase> shapeBaseList) {
+        this.shapeBaseList = shapeBaseList;
+    }
+
     /**
      * 覆盖重写绘图方法：窗口拖拽或最大小化自动调用，也可手动调用repaint重绘
      *

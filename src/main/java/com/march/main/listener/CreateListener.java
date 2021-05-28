@@ -52,12 +52,8 @@ public class CreateListener implements ActionListener {
                 shapeBase = shapeFactory.createCircle("圆", random.nextInt(width), random.nextInt(height), random.nextInt(100) + 50);
                 break;
             case "按钮":
-                //1.通过抽象工厂,创建适配JButton的MyButton对象
+                //1.通过抽象工厂,创建适配JButton的MyButton对象  2.在构造函数中调用drawPanel.add(button)将button画出来
                 shapeBase = shapeFactory.createButton("自定义按钮", random.nextInt(width), random.nextInt(height), drawPanel);
-                //2.shapeBase向下转型为MyButton获取JButton对象
-                MyButton myButton = (MyButton) shapeBase;
-                //3.立刻添加到面板
-                drawPanel.add(myButton.getButton());
                 break;
         }
         //5.从画图面板对象中取出shapeBaseList的引用，增加对应的图形

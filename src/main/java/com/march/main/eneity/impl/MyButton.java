@@ -24,11 +24,22 @@ public class MyButton extends ShapeBase {
         button.setBounds(startX, startY, 150, 30);
         //1.2按钮添加单例的选中监听器
         button.addMouseListener(MouseListener.singletonMouseListener);
+        //1.3将按钮添加到面板
+        drawPanel.add(button);
         this.drawPanel = drawPanel;
     }
 
-    public JButton getButton() {
-        return button;
+    public MyButton(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, JPanel drawPanel) {
+        super(name, startX, startY, checked, filled, lineColor, fillColor);
+        //1.1 创建原生的JButton
+        button = new JButton(name);
+        button.setFont(new Font("黑体", Font.PLAIN, 20));
+        button.setBounds(startX, startY, 150, 30);
+        //1.2 按钮添加单例的选中监听器
+        button.addMouseListener(MouseListener.singletonMouseListener);
+        //1.3 将按钮添加到面板
+        drawPanel.add(button);
+        this.drawPanel = drawPanel;
     }
 
     @Override
@@ -63,11 +74,9 @@ public class MyButton extends ShapeBase {
 
     @Override
     public ShapeBase clone() {
-        //创建MyButton的克隆对象，并添加到面板
-        MyButton clone = new MyButton(this.getName(),
+        //创建MyButton的克隆对象，在构造函数中直接画出button
+        return new MyButton(this.getName(),
                 this.button.getX(), this.button.getY() + 50, drawPanel);
-        drawPanel.add(clone.getButton());
-        return clone;
     }
 
     @Override

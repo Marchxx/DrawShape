@@ -19,6 +19,12 @@ public class Rectangle extends ShapeBase {
         this.height = height;
     }
 
+    public Rectangle(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, int width, int height) {
+        super(name, startX, startY, checked, filled, lineColor, fillColor);
+        this.width = width;
+        this.height = height;
+    }
+
     public int getWidth() {
         return width;
     }

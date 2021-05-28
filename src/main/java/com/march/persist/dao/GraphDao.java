@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface GraphDao {
 
+    GraphPo findOneByName(String name);
+
     List<GraphPo> findAllGraph();
 
     void saveGraph(GraphPo graphPo);

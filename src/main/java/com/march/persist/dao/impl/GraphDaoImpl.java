@@ -3,6 +3,7 @@ package com.march.persist.dao.impl;
 import com.march.persist.dao.GraphDao;
 import com.march.persist.po.GraphPo;
 import com.march.common.utils.DruidUtil;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -21,10 +22,24 @@ public class GraphDaoImpl implements GraphDao {
         }
     }
 
+
+    @Override
+    public GraphPo findOneByName(String name) {
+        //Note：如果Graph不存在则会报错，要加try catch处理
+        GraphPo graphPo = null;
+        try {
+            graphPo = jdbcTemplate.queryForObject("SELECT * FROM t_graph WHERE name = ?", new BeanPropertyRowMapper<>(GraphPo.class), name);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return graphPo;
+    }
+
     @Override
     public List<GraphPo> findAllGraph() {
         return jdbcTemplate.query("SELECT * FROM t_graph", new BeanPropertyRowMapper<>(GraphPo.class));
     }
+
 
     @Override
     public void saveGraph(GraphPo graphPo) {

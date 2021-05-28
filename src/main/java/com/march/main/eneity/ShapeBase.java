@@ -34,6 +34,17 @@ public abstract class ShapeBase {
         this.startY = startY;
     }
 
+    //数据库还原对象使用的构造函数
+    public ShapeBase(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor) {
+        this.name = name;
+        this.startX = startX;
+        this.startY = startY;
+        this.checked = checked;
+        this.filled = filled;
+        this.lineColor = lineColor;
+        this.fillColor = fillColor;
+    }
+
     public String getName() {
         return name;
     }
