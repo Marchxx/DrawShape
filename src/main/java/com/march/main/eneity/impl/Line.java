@@ -65,7 +65,7 @@ public class Line extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y, MouseEvent e) {
+    public boolean isSelected(int x, int y) {
         //点到直线的距离公式
         double A = (endY - startY) * 1.0 / (endX - startX);
         double B = -1;

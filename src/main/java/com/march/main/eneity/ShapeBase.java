@@ -110,8 +110,8 @@ public abstract class ShapeBase {
     public abstract void move(int distanceX, int distanceY);
 
 
-    //抽象方法：判断是否被选中，参数为鼠标坐标、e用来判定当前鼠标是否为自定义组件
-    public abstract boolean isSelected(int x, int y, MouseEvent e);
+    //抽象方法：判断是否被选中，参数为鼠标坐标
+    public abstract boolean isSelected(int x, int y);
 
 
     //抽象方法：对象克隆

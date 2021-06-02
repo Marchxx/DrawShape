@@ -54,7 +54,7 @@ public class Circle extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y, MouseEvent e) {
+    public boolean isSelected(int x, int y) {
         //计算(x,y)到圆心的距离
         double X = Math.pow(x - (this.startX + radius), 2);
         double Y = Math.pow(y - (this.startY + radius), 2);

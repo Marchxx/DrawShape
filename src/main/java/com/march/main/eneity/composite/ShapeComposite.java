@@ -68,10 +68,10 @@ public class ShapeComposite extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y, MouseEvent e) {
+    public boolean isSelected(int x, int y) {
         boolean flag = false;
         for (ShapeBase shapeBase : shapeBaseList) {
-            if (shapeBase.isSelected(x, y, e)) {
+            if (shapeBase.isSelected(x, y)) {
                 flag = true;
                 break;
             }

@@ -1,5 +1,6 @@
 package com.march.main.listener;
 
+import com.march.common.utils.ComponentUtil;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
 import com.march.main.eneity.composite.ShapeComposite;
@@ -22,8 +23,10 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
 
     private Point startPoint = new Point();//鼠标选框绘制起点坐标
     private Point endPoint = new Point();//鼠标选框绘制终点坐标
-    private Point drawStartPoint = new Point();//绘图起点坐标
+    private Point drawStartPoint = new Point();//实际绘图起点坐标
+
     private boolean downChooseFlag = false;//按下并选中图形标识：满足为true
+    private boolean isMouseLeft = false;//判断是否为鼠标左键
 
     public static final MouseListener singletonMouseListener = new MouseListener();
 
@@ -40,14 +43,16 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
     }
 
     /**
-     * 鼠标点击：实现图形单选
+     * 鼠标左键点击：实现图形单选
      * 如果选中则直接break，无需判定列表后续
      */
     @Override
-    public void mouseClicked(MouseEvent e) {//单击
-        shapeBaseList = drawPanel.getShapeBaseList();
-        if (shapeBaseList == null)
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() != MouseEvent.BUTTON1) {
             return;
+        }
+        shapeBaseList = drawPanel.getShapeBaseList();
+        if (shapeBaseList == null) return;
         cancelSelected();
         singleSelect(e);
         drawPanel.repaint();
@@ -55,41 +60,52 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
 
 
     @Override
-    public void mousePressed(MouseEvent e) {//按下
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() != MouseEvent.BUTTON1) {
+            return;
+        }
+        isMouseLeft = true;//鼠标左键按下
+        Point realLocation = ComponentUtil.getMouseRealLocation(e);
         shapeBaseList = drawPanel.getShapeBaseList();
         for (ShapeBase shapeBase : shapeBaseList) {
-            //1.判断按下时，鼠标是否处于某个图形面积内并且该图形已被选中
-            if (shapeBase.isSelected(e.getX(), e.getY(), e) && shapeBase.isChecked()) {
+            // 判断按下时，鼠标是否处于某个图形面积内并且该图形已被选中
+            if (shapeBase.isSelected(realLocation.x, realLocation.y) && shapeBase.isChecked()) {
                 downChooseFlag = true;//设置chooseFlag为true
             }
         }
-        //2.记录按下时的开始坐标
-        startPoint.x = e.getX();
-        startPoint.y = e.getY();
+        // 记录按下时的开始坐标
+        startPoint.x = realLocation.x;
+        startPoint.y = realLocation.y;
     }
 
 
     @Override
-    public void mouseReleased(MouseEvent e) {//释放
+    public void mouseReleased(MouseEvent e) {
+        if (e.getButton() != MouseEvent.BUTTON1) {
+            return;
+        }
+        isMouseLeft = false;//鼠标左键释放
         if (downChooseFlag) {
             //1.若按下并选中标志为true，则进行恢复
             downChooseFlag = false;
         } else {
             //2.反之判断鼠标框选多个图形
-            endPoint.x = e.getX();
-            endPoint.y = e.getY();
-            //与单选进行区分
-            if (!startPoint.equals(endPoint)) {
-                shapeBaseList = drawPanel.getShapeBaseList();
-                //System.out.println("当前列表：" + shapeBaseList);
-                if (shapeBaseList == null)
-                    return;
-                //鼠标画框实现多选
-                cancelSelected();
-                multiSelect(drawStartPoint, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y), e);
-                drawPanel.repaint();
+            Point realLocation = ComponentUtil.getMouseRealLocation(e);
+            endPoint.x = realLocation.x;
+            endPoint.y = realLocation.y;
+            if (startPoint.equals(endPoint)) {
+                return;//起点坐标与终点一致，与单选进行区分
             }
+            shapeBaseList = drawPanel.getShapeBaseList();
+            //System.out.println("当前列表：" + shapeBaseList);
+            if (shapeBaseList == null)
+                return;
+            //鼠标画框实现多选
+            cancelSelected();
+            multiSelect(drawStartPoint, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y), e);
+            drawPanel.repaint();
         }
+
     }
 
     @Override
@@ -103,12 +119,13 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {//拖拽：按下并移动
+    public void mouseDragged(MouseEvent e) {//拖拽：左键按下并移动
+        Point realLocation = ComponentUtil.getMouseRealLocation(e);
         //1.根据判断结果，完成不同的鼠标动作
-        if (downChooseFlag) {
-            //2.1 鼠标按下并且存在图形被选中，则进行拖拽移动
-            endPoint.x = e.getX();
-            endPoint.y = e.getY();
+        if (downChooseFlag && isMouseLeft) {
+            //2.1 鼠标左键按下并且存在图形被选中，则进行拖拽移动
+            endPoint.x = realLocation.x;
+            endPoint.y = realLocation.y;
             int deltaX = endPoint.x - startPoint.x;
             int deltaY = endPoint.y - startPoint.y;
             startPoint.x = endPoint.x;
@@ -119,12 +136,12 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
                 }
             }
             drawPanel.repaint();
-        } else {
-            //2.2 无图形被选中，进行框选
+        } else if (isMouseLeft) {
+            //2.2 鼠标左键按下，但无图形选中执行框选
             //防止绘制的矩形重叠，repaint()不会立即执行，调用它后会有一个等待处理的过程
             drawPanel.paintImmediately(0, 0, 1920, 1080);
-            endPoint.x = e.getX();
-            endPoint.y = e.getY();
+            endPoint.x = realLocation.x;
+            endPoint.y = realLocation.y;
             //计算绘制矩形的起点坐标
             drawStartPoint.x = Math.min(startPoint.x, endPoint.x);
             drawStartPoint.y = Math.min(startPoint.y, endPoint.y);
@@ -139,7 +156,7 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
     /**
      * 所有图形取消选中
      */
-    public void cancelSelected() {
+    private void cancelSelected() {
         for (ShapeBase shapeBase : shapeBaseList) {
             shapeBase.setChecked(false);
         }
@@ -151,7 +168,8 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
      */
     private void singleSelect(MouseEvent e) {
         for (ShapeBase shapeBase : shapeBaseList) {
-            if (shapeBase.isSelected(e.getX(), e.getY(), e)) {
+            Point realLocation = ComponentUtil.getMouseRealLocation(e);
+            if (shapeBase.isSelected(realLocation.x, realLocation.y)) {
                 shapeBase.setChecked(true);
 
                 //若选中装饰对象，取出最外层target
@@ -165,7 +183,6 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
                     String printAll = composite.printAll(new StringBuilder());
                     JOptionPane.showMessageDialog(drawPanel, printAll);
                 }
-
                 //判定成功直接break
                 break;
             }
@@ -182,7 +199,7 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
             for (int x = drawStartPoint.x; x <= drawStartPoint.x + width; x++) {
                 boolean flag = false;
                 for (int y = drawStartPoint.y; y <= drawStartPoint.y + height; y++) {
-                    if (shapeBase.isSelected(x, y, e)) {
+                    if (shapeBase.isSelected(x, y)) {
                         shapeBase.setChecked(true);
                         flag = true;
                         break;

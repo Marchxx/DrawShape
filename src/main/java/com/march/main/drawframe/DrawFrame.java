@@ -9,6 +9,8 @@ public class DrawFrame extends JFrame {
 
     //鼠标监听器的单例对象,传递给画图面板
     private MouseListener mouseListener = MouseListener.singletonMouseListener;
+    //右键菜单监听的单例对象,传递给画图面板
+    private RightMenuListener rightMenuListener = RightMenuListener.singletonRightMenuListener;
     //中心画图面板
     private DrawPanel jPanelCenter = null;
 
@@ -33,12 +35,12 @@ public class DrawFrame extends JFrame {
         setContentPane(mainPanel);
         setVisible(true);
         //设置画图面板，用来给监听器获取右侧面板的画笔：必须在setVisible(true)后调用
-        CreateListener.setProperties(jPanelCenter);
-        CopyListener.setProperties(jPanelCenter);
-        MouseListener.setProperties(jPanelCenter);
-        MoveListener.setProperties(jPanelCenter);
         CompositeListener.setProperties(jPanelCenter);
+        CopyListener.setProperties(jPanelCenter);
+        CreateListener.setProperties(jPanelCenter);
         DateAccessListener.setProperties(jPanelCenter);
+        MouseListener.setProperties(jPanelCenter);
+        RightMenuListener.setProperties(jPanelCenter);
     }
 
     /**
@@ -62,7 +64,9 @@ public class DrawFrame extends JFrame {
         DrawJToolBar drawJToolBar = new DrawJToolBar();
         tabbedPane.addTab("文件", drawJToolBar.getFileJToolBar());//设置菜单1
         tabbedPane.addTab("绘制图形", drawJToolBar.getDrawJToolBar()); //设置菜单2
-        tabbedPane.addTab("移动图形", drawJToolBar.getMoveJToolBar()); //设置菜单3
+
+        //tabbedPane.addTab("移动图形", drawJToolBar.getMoveJToolBar()); //设置菜单3
+
         tabbedPane.addTab("基本操作", drawJToolBar.getEditJToolBar()); //设置菜单4
         tabbedPane.addTab("调整样式", drawJToolBar.getDecorateJToolBar()); //设置菜单5
         jPanelUp.add(tabbedPane, FlowLayout.LEFT);
@@ -86,6 +90,8 @@ public class DrawFrame extends JFrame {
         //右侧画图面板添加判断选中监听器
         jPanelCenter.addMouseListener(mouseListener);
         jPanelCenter.addMouseMotionListener(mouseListener);
+        //右侧画图面板添加 右键菜单监听器
+        jPanelCenter.addMouseListener(rightMenuListener);
 
         //3.5菜单选项卡中传递画图面板的引用，用来操作页面
         drawJToolBar.setjPanelCenter(jPanelCenter);

@@ -66,7 +66,7 @@ public class Rectangle extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y, MouseEvent e) {
+    public boolean isSelected(int x, int y) {
         int boundLeftX = this.startX - 10;
         int boundRightX = this.startX + width + 10;
         int boundUpY = this.startY - 10;

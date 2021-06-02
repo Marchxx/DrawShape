@@ -2,6 +2,7 @@ package com.march.main.eneity.impl;
 
 import com.march.main.eneity.ShapeBase;
 import com.march.main.listener.MouseListener;
+import com.march.main.listener.RightMenuListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +23,10 @@ public class MyButton extends ShapeBase {
         button = new JButton(name);
         button.setFont(new Font("黑体", Font.PLAIN, 20));
         button.setBounds(startX, startY, 150, 30);
-        //1.2按钮添加单例的选中监听器
+        //1.2按钮添加单例的监听器
         button.addMouseListener(MouseListener.singletonMouseListener);
+        button.addMouseMotionListener(MouseListener.singletonMouseListener);
+        button.addMouseListener(RightMenuListener.singletonRightMenuListener);
         //1.3将按钮添加到面板
         drawPanel.add(button);
         this.drawPanel = drawPanel;
@@ -35,8 +38,10 @@ public class MyButton extends ShapeBase {
         button = new JButton(name);
         button.setFont(new Font("黑体", Font.PLAIN, 20));
         button.setBounds(startX, startY, 150, 30);
-        //1.2 按钮添加单例的选中监听器
+        //1.2 按钮添加单例的监听器
         button.addMouseListener(MouseListener.singletonMouseListener);
+        button.addMouseMotionListener(MouseListener.singletonMouseListener);
+        button.addMouseListener(RightMenuListener.singletonRightMenuListener);
         //1.3 将按钮添加到面板
         drawPanel.add(button);
         this.drawPanel = drawPanel;
@@ -58,13 +63,7 @@ public class MyButton extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y, MouseEvent e) {
-        //判断点击处是否为控件，获取坐标
-        if (e.getSource() instanceof JButton) {
-            JButton jButton = (JButton) e.getSource();
-            x = jButton.getX();
-            y = jButton.getY();
-        }
+    public boolean isSelected(int x, int y) {
         int boundLeftX = button.getX() - 10;
         int boundRightX = button.getX() + button.getWidth() + 10;
         int boundUpY = button.getY() - 10;

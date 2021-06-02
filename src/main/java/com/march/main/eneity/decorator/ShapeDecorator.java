@@ -60,8 +60,8 @@ public class ShapeDecorator extends ShapeBase {
     }
 
     @Override
-    public boolean isSelected(int x, int y, MouseEvent e) {
-        return target.isSelected(x, y, e);
+    public boolean isSelected(int x, int y) {
+        return target.isSelected(x, y);
     }
 
     @Override
