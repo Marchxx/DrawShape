@@ -1,5 +1,7 @@
 package com.march.main.listener;
 
+import com.march.main.command.CommandInvoker;
+import com.march.main.command.impl.CompositeCommand;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
 import com.march.main.eneity.composite.ShapeComposite;
@@ -49,17 +51,9 @@ public class CompositeListener implements ActionListener {
         ShapeFactory shapeFactory = StandardShapeFactory.shapeFactory;
         ShapeBase shapeComposite = shapeFactory.createComposite("组合对象");
         ShapeComposite composite = shapeComposite.getComposite();
-        //2.通过迭代器遍历，能够在遍历list动态删除元素
-        Iterator<ShapeBase> iterator = shapeBaseList.iterator();
-        while (iterator.hasNext()) {
-            ShapeBase shapeBase = iterator.next();
-            if (shapeBase.isChecked()) {
-                //Note:使用ArrayList的remove会报并发修改异常
-                composite.add(shapeBase);
-                iterator.remove();
-            }
-        }
-        shapeBaseList.add(composite);
+        //2.调用执行组合命令
+        CompositeCommand compositeCommand = new CompositeCommand(drawPanel, composite);
+        CommandInvoker.singletonCommandInvoker.execute(compositeCommand);
     }
 
     //解除组合

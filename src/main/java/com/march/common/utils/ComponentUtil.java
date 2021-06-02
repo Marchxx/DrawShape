@@ -44,7 +44,6 @@ public class ComponentUtil {
      */
     public static JPopupMenu getNewJPopupMenu() {
         JPopupMenu menu = new JPopupMenu();
-        //menu.setPreferredSize(new Dimension(120, 80));
         return menu;
     }
 

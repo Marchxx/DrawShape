@@ -1,5 +1,8 @@
 package com.march.main.listener;
 
+import com.march.main.command.Command;
+import com.march.main.command.CommandInvoker;
+import com.march.main.command.impl.CopyCommand;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
 
@@ -13,9 +16,7 @@ import java.util.List;
  */
 public class CopyListener implements ActionListener {
 
-    private Graphics2D g2d;//通过drawPanel获取
     private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
-    private List<ShapeBase> shapeBaseList = null;//通过drawPanel获取
 
     public static final CopyListener singletonCopyListener = new CopyListener();
 
@@ -24,12 +25,11 @@ public class CopyListener implements ActionListener {
 
     public static void setProperties(DrawPanel drawPanel) {
         singletonCopyListener.drawPanel = drawPanel;
-        singletonCopyListener.g2d = (Graphics2D) drawPanel.getGraphics();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        shapeBaseList = drawPanel.getShapeBaseList();
+        List<ShapeBase> shapeBaseList = drawPanel.getShapeBaseList();
         if (shapeBaseList == null)
             return;
         //Note：使用迭代器和增强for遍历列表元素时动态删除和修改会报java.util.ConcurrentModificationException
@@ -38,17 +38,11 @@ public class CopyListener implements ActionListener {
         for (int i = 0; i < listSize; i++) {
             ShapeBase shapeBase = shapeBaseList.get(i);
             if (shapeBase.isChecked()) {
-                clone(shapeBase);
-                //break;
+                //执行复制命令
+                Command copyCommand = new CopyCommand(drawPanel, shapeBase);
+                CommandInvoker.singletonCommandInvoker.execute(copyCommand);
             }
         }
     }
 
-    private void clone(ShapeBase shapeBase) {
-        //1.获取克隆出的对象，添加到图形集合
-        ShapeBase clone = shapeBase.clone();
-        shapeBaseList.add(clone);
-        //2.画出该对象
-        clone.draw(g2d);
-    }
 }

@@ -1,6 +1,9 @@
 package com.march.main.listener;
 
 import com.march.common.utils.ComponentUtil;
+import com.march.main.command.CommandInvoker;
+import com.march.main.command.impl.CopyCommand;
+import com.march.main.command.impl.DeleteCommand;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
 
@@ -83,10 +86,25 @@ public class RightMenuListener implements MouseListener {
     //获取无图形选中的右键菜单
     private JPopupMenu getUnCheckedMenu() {
         JPopupMenu menu = ComponentUtil.getNewJPopupMenu();
-        JMenuItem mUndo = ComponentUtil.getNewJMenuItem("撤销");
-        JMenuItem mClear = ComponentUtil.getNewJMenuItem("清空画板");
+
+        //添加撤销按钮
+        JMenuItem mUndo = ComponentUtil.getNewJMenuItem("撤销(Undo)");
+        mUndo.addActionListener((e) -> {
+            CommandInvoker.singletonCommandInvoker.undo();
+        });
         menu.add(mUndo);
-        menu.add(mClear);
+
+        //添加重做按钮
+        JMenuItem mRedo = ComponentUtil.getNewJMenuItem("重做(Redo)");
+        mRedo.addActionListener((e) -> {
+            CommandInvoker.singletonCommandInvoker.redo();
+        });
+        menu.add(mRedo);
+
+        menu.addSeparator();// 添加一条分隔符
+
+        //添加清空面板
+        JMenuItem mClear = ComponentUtil.getNewJMenuItem("清空画板(C)");
         mClear.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //点击清空：遍历列表
@@ -98,30 +116,55 @@ public class RightMenuListener implements MouseListener {
                 drawPanel.repaint();
             }
         });
+        menu.add(mClear);
+
         return menu;
     }
 
     //获取包含图形选中的右键菜单
     private JPopupMenu getCheckedMenu() {
         JPopupMenu menu = ComponentUtil.getNewJPopupMenu();
-        JMenuItem mDel = ComponentUtil.getNewJMenuItem("删除(D)");
-        menu.add(mDel);
-        mDel.addActionListener(new ActionListener() {
+        //上对齐
+        JMenuItem mUp = ComponentUtil.getNewJMenuItem("上对齐");
+        mUp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //点击清空：遍历列表
-                shapeBaseList = drawPanel.getShapeBaseList();
-                //通过迭代器遍历，能够在遍历list动态删除元素
-                Iterator<ShapeBase> iterator = shapeBaseList.iterator();
-                while (iterator.hasNext()) {
-                    ShapeBase shapeBase = iterator.next();
-                    if (shapeBase.isChecked()) {
-                        shapeBase.clearShape();
-                        iterator.remove();
-                    }
-                }
-                drawPanel.repaint();
             }
         });
+        menu.add(mUp);
+
+        //下对齐
+        JMenuItem mBottom = ComponentUtil.getNewJMenuItem("下对齐");
+        mBottom.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        menu.add(mBottom);
+
+        //左对齐
+        JMenuItem mLeft = ComponentUtil.getNewJMenuItem("左对齐");
+        mLeft.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        menu.add(mLeft);
+
+        //右对齐
+        JMenuItem mRight = ComponentUtil.getNewJMenuItem("右对齐");
+        mRight.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        menu.add(mRight);
+
+        menu.addSeparator();// 添加一条分隔符
+
+        //删除选中图形
+        JMenuItem mDel = ComponentUtil.getNewJMenuItem("删除(D)");
+        mDel.addActionListener(e -> {
+            DeleteCommand deleteCommand = new DeleteCommand(drawPanel);
+            CommandInvoker.singletonCommandInvoker.execute(deleteCommand);
+        });
+        menu.add(mDel);
         return menu;
     }
 }

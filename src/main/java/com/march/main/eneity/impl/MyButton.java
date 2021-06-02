@@ -19,21 +19,18 @@ public class MyButton extends ShapeBase {
 
     public MyButton(String name, int startX, int startY, JPanel drawPanel) {
         super(name, startX, startY);
-        //1.1创建原生的JButton
-        button = new JButton(name);
-        button.setFont(new Font("黑体", Font.PLAIN, 20));
-        button.setBounds(startX, startY, 150, 30);
-        //1.2按钮添加单例的监听器
-        button.addMouseListener(MouseListener.singletonMouseListener);
-        button.addMouseMotionListener(MouseListener.singletonMouseListener);
-        button.addMouseListener(RightMenuListener.singletonRightMenuListener);
-        //1.3将按钮添加到面板
-        drawPanel.add(button);
         this.drawPanel = drawPanel;
+        createJButton(name);
     }
 
     public MyButton(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor, JPanel drawPanel) {
         super(name, startX, startY, checked, filled, lineColor, fillColor);
+        this.drawPanel = drawPanel;
+        createJButton(name);
+    }
+
+    //创建原生的JButton，赋值给button作为适配器调用
+    public void createJButton(String name) {
         //1.1 创建原生的JButton
         button = new JButton(name);
         button.setFont(new Font("黑体", Font.PLAIN, 20));
@@ -43,8 +40,7 @@ public class MyButton extends ShapeBase {
         button.addMouseMotionListener(MouseListener.singletonMouseListener);
         button.addMouseListener(RightMenuListener.singletonRightMenuListener);
         //1.3 将按钮添加到面板
-        drawPanel.add(button);
-        this.drawPanel = drawPanel;
+        this.drawPanel.add(button);
     }
 
     @Override

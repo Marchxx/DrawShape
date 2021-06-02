@@ -5,6 +5,7 @@ import com.march.main.eneity.decorator.ShapeDecorator;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 /**
  * 图形抽象基类

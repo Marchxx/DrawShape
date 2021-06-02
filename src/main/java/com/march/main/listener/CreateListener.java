@@ -1,5 +1,7 @@
 package com.march.main.listener;
 
+import com.march.main.command.CommandInvoker;
+import com.march.main.command.impl.CreateCommand;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
 import com.march.main.eneity.impl.MyButton;
@@ -16,10 +18,7 @@ import java.util.Random;
  */
 public class CreateListener implements ActionListener {
 
-
     private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
-    private Graphics2D g2d;//通过drawPanel获取
-    private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
 
     public static final CreateListener singletonCreateListener = new CreateListener();
 
@@ -28,7 +27,6 @@ public class CreateListener implements ActionListener {
 
     public static void setProperties(DrawPanel drawPanel) {
         singletonCreateListener.drawPanel = drawPanel;
-        singletonCreateListener.g2d = (Graphics2D) drawPanel.getGraphics();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -56,10 +54,8 @@ public class CreateListener implements ActionListener {
                 shapeBase = shapeFactory.createButton("自定义按钮", random.nextInt(width), random.nextInt(height), drawPanel);
                 break;
         }
-        //5.从画图面板对象中取出shapeBaseList的引用，增加对应的图形
-        shapeBaseList = drawPanel.getShapeBaseList();
-        shapeBaseList.add(shapeBase);
-        //6.调用draw，实现子类重写的不同方法
-        shapeBase.draw(g2d);
+        //5.调用创建图形命令
+        CreateCommand createCommand = new CreateCommand(drawPanel, shapeBase);
+        CommandInvoker.singletonCommandInvoker.execute(createCommand);
     }
 }
