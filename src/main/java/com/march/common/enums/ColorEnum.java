@@ -15,7 +15,8 @@ public enum ColorEnum {
     GRAY(5, Color.GRAY),
     MAGENTA(6, Color.MAGENTA),
     ORANGE(7, Color.ORANGE),
-    PINK(8, Color.PINK);
+    PINK(8, Color.PINK),
+    WHITE(9, Color.WHITE);
 
     int code;
     Color color;

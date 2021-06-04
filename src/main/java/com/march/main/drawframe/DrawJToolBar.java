@@ -109,8 +109,8 @@ public class DrawJToolBar {
                         //1.创建新的装饰对象，并设置选中为true可以连续点击增加装饰
                         BorderDecoratorImpl borderDecorator = new BorderDecoratorImpl(shapeBaseList.get(j), colorEnum.getColor());
                         borderDecorator.setChecked(true);
-                        //2.执行装饰命令
-                        DecorateCommand decorateCommand = new DecorateCommand(jPanelCenter, borderDecorator);
+                        //2.执行装饰命令，直接移除会改变shapeList的元素顺序，应记录j下标的位置进行替换
+                        DecorateCommand decorateCommand = new DecorateCommand(jPanelCenter, borderDecorator, j);
                         CommandInvoker.singletonCommandInvoker.execute(decorateCommand);
                     }
                 }
@@ -134,7 +134,7 @@ public class DrawJToolBar {
                         FillDecoratorImpl fillDecorator = new FillDecoratorImpl(shapeBaseList.get(j), colorEnum.getColor());
                         fillDecorator.setChecked(true);
                         //2.执行装饰命令
-                        DecorateCommand decorateCommand = new DecorateCommand(jPanelCenter, fillDecorator);
+                        DecorateCommand decorateCommand = new DecorateCommand(jPanelCenter, fillDecorator, j);
                         CommandInvoker.singletonCommandInvoker.execute(decorateCommand);
                     }
                 }

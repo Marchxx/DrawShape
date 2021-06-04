@@ -17,31 +17,26 @@ public class DecorateCommand implements Command {
     //定义Receiver
     private DrawPanel drawPanel;//画图面板的引用
     private ShapeDecorator shapeDecorator;//装饰图形
+    private Integer index;//替换原图纸的下标位置
 
-    public DecorateCommand(DrawPanel drawPanel, ShapeDecorator shapeDecorator) {
+    public DecorateCommand(DrawPanel drawPanel, ShapeDecorator shapeDecorator, Integer index) {
         this.drawPanel = drawPanel;
         this.shapeDecorator = shapeDecorator;
+        this.index = index;
     }
 
     @Override
     public void execute() {
+//        System.out.println(shapeDecorator.getFillColor());
+//        System.out.println(shapeDecorator.getTarget().getFillColor());
         List<ShapeBase> shapeBaseList = drawPanel.getShapeBaseList();
-        System.out.println("当前列表：" + shapeBaseList);
-
-        //遍历图形列表，将target替换为装饰对象
-        shapeBaseList.remove(shapeDecorator.getTarget());
-        shapeBaseList.add(shapeDecorator);
-
-        System.out.println(shapeDecorator);
-        System.out.println(shapeDecorator.getTarget());
-        System.out.println("当前列表：" + shapeBaseList);
+        //将target替换为装饰对象
+        shapeBaseList.set(index, shapeDecorator);
     }
 
     @Override
     public void unExecute() {
         List<ShapeBase> shapeBaseList = drawPanel.getShapeBaseList();
-        //遍历图形列表，将装饰图形引用替换为target
-        shapeBaseList.remove(shapeDecorator);
         //还原target的属性
         ShapeBase target = shapeDecorator.getTarget();
         if (shapeDecorator instanceof FillDecoratorImpl) {
@@ -52,7 +47,8 @@ public class DecorateCommand implements Command {
             BorderDecoratorImpl borderDecorator = (BorderDecoratorImpl) shapeDecorator;
             target.setLineColor(borderDecorator.getTargetLineColor());
         }
-        shapeBaseList.add(target);
+        //将装饰图形引用替换为target
+        shapeBaseList.set(index, target);
         drawPanel.repaint();
     }
 
@@ -60,7 +56,6 @@ public class DecorateCommand implements Command {
     public void reExecute() {
         List<ShapeBase> shapeBaseList = drawPanel.getShapeBaseList();
         ShapeBase target = shapeDecorator.getTarget();
-        shapeBaseList.remove(target);
         //遍历图形列表，将target属性修改为装饰对象
         if (shapeDecorator instanceof FillDecoratorImpl) {
             FillDecoratorImpl fillDecorator = (FillDecoratorImpl) shapeDecorator;
@@ -70,7 +65,7 @@ public class DecorateCommand implements Command {
             BorderDecoratorImpl borderDecorator = (BorderDecoratorImpl) shapeDecorator;
             target.setLineColor(borderDecorator.getLineColor());
         }
-        shapeBaseList.add(shapeDecorator);
+        shapeBaseList.set(index, shapeDecorator);
         drawPanel.repaint();
     }
 }
