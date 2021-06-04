@@ -64,6 +64,7 @@ public class ComponentUtil {
     public static Point getMouseRealLocation(MouseEvent e) {
         int x = e.getX(), y = e.getY();
         if (e.getSource() instanceof JButton) {
+            //组件的绝对位置
             JComponent jComponent = (JComponent) e.getSource();
             x += jComponent.getX();
             y += jComponent.getY();

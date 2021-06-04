@@ -1,6 +1,8 @@
 package com.march.main.listener;
 
 import com.march.common.utils.ComponentUtil;
+import com.march.main.command.CommandInvoker;
+import com.march.main.command.impl.MoveCommand;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
 import com.march.main.eneity.composite.ShapeComposite;
@@ -10,7 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 监听器：响应鼠标点击单击选中图形、框选多个图形、点击移动图形
@@ -21,9 +25,12 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
     private Graphics2D g2d;//通过drawPanel获取
     private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
 
-    private Point startPoint = new Point();//鼠标选框绘制起点坐标
-    private Point endPoint = new Point();//鼠标选框绘制终点坐标
-    private Point drawStartPoint = new Point();//实际绘图起点坐标
+    private Point startPoint = new Point();//鼠标选框绘制起点坐标in，拖拽过程变化
+    private Point endPoint = new Point();//鼠标选框绘制终点坐标，拖拽过程变化
+    private Point drawStartPoint = new Point();//选框绘制左上角坐标
+
+    private Point pressStartPoint = new Point();//记录按下时的起点，每次按下才改变
+    private Set<ShapeBase> moveShapeSet = new HashSet<>();//记录要移动的图形集合，防止重复添加，每次按下清空
 
     private boolean downChooseFlag = false;//按下并选中图形标识：满足为true
     private boolean isMouseLeft = false;//判断是否为鼠标左键
@@ -71,11 +78,14 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
             // 判断按下时，鼠标是否处于某个图形面积内并且该图形已被选中
             if (shapeBase.isSelected(realLocation.x, realLocation.y) && shapeBase.isChecked()) {
                 downChooseFlag = true;//设置chooseFlag为true
+                moveShapeSet.clear();//清空移动图形列表
             }
         }
         // 记录按下时的开始坐标
         startPoint.x = realLocation.x;
         startPoint.y = realLocation.y;
+        pressStartPoint.x = realLocation.x;
+        pressStartPoint.y = realLocation.y;
     }
 
 
@@ -85,21 +95,21 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
             return;
         }
         isMouseLeft = false;//鼠标左键释放
+        Point realLocation = ComponentUtil.getMouseRealLocation(e);
+        endPoint.x = realLocation.x;
+        endPoint.y = realLocation.y;
         if (downChooseFlag) {
-            //1.若按下并选中标志为true，则进行恢复
+            //1.拖拽时进行了移动，发送移动命令，记录按下与松开的偏移量
+            MoveCommand moveCommand = new MoveCommand(drawPanel, moveShapeSet,
+                    endPoint.x - pressStartPoint.x, endPoint.y - pressStartPoint.y);
+            CommandInvoker.singletonCommandInvoker.execute(moveCommand);
+            //2.恢复按下选中标识，取消拖拽
             downChooseFlag = false;
         } else {
             //2.反之判断鼠标框选多个图形
-            Point realLocation = ComponentUtil.getMouseRealLocation(e);
-            endPoint.x = realLocation.x;
-            endPoint.y = realLocation.y;
-            if (startPoint.equals(endPoint)) {
-                return;//起点坐标与终点一致，与单选进行区分
-            }
-            shapeBaseList = drawPanel.getShapeBaseList();
-            //System.out.println("当前列表：" + shapeBaseList);
-            if (shapeBaseList == null)
-                return;
+            if (startPoint.equals(endPoint)) return;//起点坐标与终点一致，与单选进行区分
+            if (drawPanel.getShapeBaseList() == null) return;
+            //System.out.println("当前列表：" +drawPanel.getShapeBaseList());
             //鼠标画框实现多选
             cancelSelected();
             multiSelect(drawStartPoint, Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y), e);
@@ -133,6 +143,7 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
             for (ShapeBase shapeBase : shapeBaseList) {
                 if (shapeBase.isChecked()) {
                     shapeBase.move(deltaX, deltaY);
+                    moveShapeSet.add(shapeBase);//加入移动图形Set
                 }
             }
             drawPanel.repaint();

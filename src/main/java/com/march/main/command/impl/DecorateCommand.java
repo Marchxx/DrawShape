@@ -27,8 +27,6 @@ public class DecorateCommand implements Command {
 
     @Override
     public void execute() {
-//        System.out.println(shapeDecorator.getFillColor());
-//        System.out.println(shapeDecorator.getTarget().getFillColor());
         List<ShapeBase> shapeBaseList = drawPanel.getShapeBaseList();
         //将target替换为装饰对象
         shapeBaseList.set(index, shapeDecorator);
