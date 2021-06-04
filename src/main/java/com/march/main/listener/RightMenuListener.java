@@ -2,7 +2,6 @@ package com.march.main.listener;
 
 import com.march.common.utils.ComponentUtil;
 import com.march.main.command.CommandInvoker;
-import com.march.main.command.impl.CopyCommand;
 import com.march.main.command.impl.DeleteCommand;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
@@ -11,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseListener;
-import java.util.Iterator;
 import java.util.List;
 
 /**

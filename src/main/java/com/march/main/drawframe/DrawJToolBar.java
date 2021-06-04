@@ -1,6 +1,8 @@
 package com.march.main.drawframe;
 
 import com.march.common.utils.ComponentUtil;
+import com.march.main.command.CommandInvoker;
+import com.march.main.command.impl.DecorateCommand;
 import com.march.main.eneity.ShapeBase;
 import com.march.main.eneity.decorator.BorderDecoratorImpl;
 import com.march.main.eneity.decorator.FillDecoratorImpl;
@@ -107,8 +109,9 @@ public class DrawJToolBar {
                         //1.创建新的装饰对象，并设置选中为true可以连续点击增加装饰
                         BorderDecoratorImpl borderDecorator = new BorderDecoratorImpl(shapeBaseList.get(j), colorEnum.getColor());
                         borderDecorator.setChecked(true);
-                        //2.将选中对象的引用指向装饰对象
-                        shapeBaseList.set(j, borderDecorator);
+                        //2.执行装饰命令
+                        DecorateCommand decorateCommand = new DecorateCommand(jPanelCenter, borderDecorator);
+                        CommandInvoker.singletonCommandInvoker.execute(decorateCommand);
                     }
                 }
                 jPanelCenter.repaint();
@@ -130,8 +133,9 @@ public class DrawJToolBar {
                         //1.创建新的装饰对象，设置选中为true可以连续点击增加装饰
                         FillDecoratorImpl fillDecorator = new FillDecoratorImpl(shapeBaseList.get(j), colorEnum.getColor());
                         fillDecorator.setChecked(true);
-                        //2.将选中对象的引用指向装饰对象
-                        shapeBaseList.set(j, fillDecorator);
+                        //2.执行装饰命令
+                        DecorateCommand decorateCommand = new DecorateCommand(jPanelCenter, fillDecorator);
+                        CommandInvoker.singletonCommandInvoker.execute(decorateCommand);
                     }
                 }
                 jPanelCenter.repaint();

@@ -9,13 +9,18 @@ import java.awt.*;
  */
 public class FillDecoratorImpl extends ShapeDecorator {
 
-    private Color fillColor;
+    private Color targetFillColor;//保存target的填充颜色
 
     public FillDecoratorImpl(ShapeBase shapeBase, Color fillColor) {
         super(shapeBase);
         this.fillColor = fillColor;
+        this.targetFillColor = target.getFillColor();
         target.setFilled(true);
         target.setFillColor(fillColor);
+    }
+
+    public Color getTargetFillColor() {
+        return targetFillColor;
     }
 
     @Override
@@ -27,6 +32,6 @@ public class FillDecoratorImpl extends ShapeDecorator {
     public ShapeBase clone() {
         //创建一个装饰目标对象的克隆
         ShapeBase shapeBaseClone = target.clone();
-        return new FillDecoratorImpl(shapeBaseClone, target.getFillColor());
+        return new FillDecoratorImpl(shapeBaseClone, this.getFillColor());
     }
 }

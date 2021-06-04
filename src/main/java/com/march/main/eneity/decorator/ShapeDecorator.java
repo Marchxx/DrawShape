@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 /**
  * 图形装饰器基类对象
  */
-public class ShapeDecorator extends ShapeBase {
+public abstract class ShapeDecorator extends ShapeBase {
 
     //保存装饰的目标对象
     protected ShapeBase target;
@@ -22,6 +22,7 @@ public class ShapeDecorator extends ShapeBase {
     public ShapeBase getTarget() {
         return target;
     }
+
 
     @Override
     public void setChecked(boolean checked) {

@@ -9,12 +9,17 @@ import java.awt.*;
  */
 public class BorderDecoratorImpl extends ShapeDecorator {
 
-    private Color lineColor;
+    private Color targetLineColor;
 
     public BorderDecoratorImpl(ShapeBase shapeBase, Color lineColor) {
         super(shapeBase);
         this.lineColor = lineColor;
+        this.targetLineColor = target.getLineColor();
         target.setLineColor(lineColor);
+    }
+
+    public Color getTargetLineColor() {
+        return targetLineColor;
     }
 
     @Override
@@ -26,6 +31,6 @@ public class BorderDecoratorImpl extends ShapeDecorator {
     public ShapeBase clone() {
         //创建一个装饰目标对象的克隆
         ShapeBase shapeBaseClone = target.clone();
-        return new BorderDecoratorImpl(shapeBaseClone, target.getLineColor());
+        return new BorderDecoratorImpl(shapeBaseClone, this.getLineColor());
     }
 }
