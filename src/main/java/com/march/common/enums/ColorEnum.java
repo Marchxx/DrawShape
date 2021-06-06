@@ -21,7 +21,9 @@ public enum ColorEnum {
     int code;
     Color color;
 
-    ColorEnum(int code, Color color) {
+    //枚举类可以有构造器，但必须是private的，它默认的也是private的。
+    //枚举类也可以有抽象方法，但是枚举项必须重写该方法
+    private ColorEnum(int code, Color color) {
         this.code = code;
         this.color = color;
     }

@@ -1,5 +1,6 @@
 package com.march.main.eneity.decorator;
 
+import com.march.common.enums.AlignEnum;
 import com.march.main.eneity.ShapeBase;
 
 import java.awt.*;
@@ -78,5 +79,39 @@ public abstract class ShapeDecorator extends ShapeBase {
     @Override
     public ShapeDecorator getDecorator() {
         return this;
+    }
+
+    //重写对齐、恢复方法
+    //调整对齐
+    public void adjustUpAlign() {//上对齐
+        target.adjustUpAlign();
+    }
+
+    public void restoreUp() {//撤销上对齐
+        target.restoreUp();
+    }
+
+    public void adjustDownAlign() {//下对齐
+        target.adjustDownAlign();
+    }
+
+    public void restoreDown() {//撤销下对齐
+        target.restoreDown();
+    }
+
+    public void adjustLeftAlign() {//左对齐
+        target.adjustLeftAlign();
+    }
+
+    public void restoreLeft() {//撤销左对齐
+        target.restoreLeft();
+    }
+
+    public void adjustRightAlign() {//右对齐
+        target.adjustRightAlign();
+    }
+
+    public void restoreRight() {//撤销右对齐
+        target.restoreRight();
     }
 }

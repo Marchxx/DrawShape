@@ -1,5 +1,6 @@
 package com.march.main.eneity;
 
+import com.march.common.enums.AlignEnum;
 import com.march.main.eneity.composite.ShapeComposite;
 import com.march.main.eneity.decorator.ShapeDecorator;
 
@@ -22,6 +23,11 @@ public abstract class ShapeBase {
 
     protected Color lineColor = Color.BLACK;//线条颜色，默认为黑色
     protected Color fillColor = Color.WHITE;//填充颜色，默认为白色
+
+    private int deltaUp = 0;//记录调整上对齐的偏移
+    private int deltaDown = 0;//记录调整下对齐的偏移
+    private int deltaLeft = 0;//记录调整上对齐的偏移
+    private int deltaRight = 0;//记录调整下对齐的偏移
 
     //组合、装饰对象使用的构造函数
     public ShapeBase(String name) {
@@ -153,5 +159,42 @@ public abstract class ShapeBase {
             g2d.setColor(this.lineColor);
         }
         return g2d;
+    }
+
+    //调整对齐
+    public void adjustUpAlign() {//上对齐
+        deltaUp = AlignEnum.ALIGN_UP.getDelta() - this.getStartY();
+        move(0, deltaUp);
+    }
+
+    public void restoreUp() {//撤销上对齐
+        move(0, -deltaUp);
+    }
+
+    public void adjustDownAlign() {//下对齐
+        deltaDown = AlignEnum.ALIGN_DOWN.getDelta() - this.getStartY();
+        move(0, deltaDown);
+    }
+
+    public void restoreDown() {//撤销下对齐
+        move(0, -deltaDown);
+    }
+
+    public void adjustLeftAlign() {//左对齐
+        deltaLeft = AlignEnum.ALIGN_LEFT.getDelta() - this.getStartX();
+        move(deltaLeft, 0);
+    }
+
+    public void restoreLeft() {//撤销左对齐
+        move(-deltaLeft, 0);
+    }
+
+    public void adjustRightAlign() {//右对齐
+        deltaRight = AlignEnum.ALIGN_RIGHT.getDelta() - this.getStartX();
+        move(deltaRight, 0);
+    }
+
+    public void restoreRight() {//撤销右对齐
+        move(-deltaRight, 0);
     }
 }

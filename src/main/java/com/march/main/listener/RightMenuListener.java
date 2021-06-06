@@ -2,15 +2,23 @@ package com.march.main.listener;
 
 import com.march.common.utils.ComponentUtil;
 import com.march.main.command.CommandInvoker;
+import com.march.main.command.impl.AlignCommand;
 import com.march.main.command.impl.DeleteCommand;
 import com.march.main.drawframe.DrawPanel;
 import com.march.main.eneity.ShapeBase;
+import com.march.main.strategy.AlignContext;
+import com.march.main.strategy.impl.DownAlignStrategy;
+import com.march.main.strategy.impl.LeftAlignStrategy;
+import com.march.main.strategy.impl.RightAlignStrategy;
+import com.march.main.strategy.impl.UpAlignStrategy;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseListener;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 监听器：响应鼠标右键单击，打开菜单
@@ -20,6 +28,7 @@ public class RightMenuListener implements MouseListener {
     private DrawPanel drawPanel;//画图面板的引用，用来获取shapeBaseList和计算宽高
     private Graphics2D g2d;//通过drawPanel获取
     private List<ShapeBase> shapeBaseList = null; //通过drawPanel获取
+    private Set<ShapeBase> alignShapeSet = new HashSet<>();//记录要对齐的图形集合，每次对齐时重置
 
     public static final RightMenuListener singletonRightMenuListener = new RightMenuListener();
 
@@ -103,16 +112,14 @@ public class RightMenuListener implements MouseListener {
 
         //添加清空面板
         JMenuItem mClear = ComponentUtil.getNewJMenuItem("清空画板(C)");
-        mClear.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                //点击清空：遍历列表
-                shapeBaseList = drawPanel.getShapeBaseList();
-                for (ShapeBase shapeBase : shapeBaseList) {
-                    shapeBase.clearShape();
-                }
-                shapeBaseList.clear();
-                drawPanel.repaint();
+        mClear.addActionListener(e -> {
+            //点击清空：遍历列表
+            shapeBaseList = drawPanel.getShapeBaseList();
+            for (ShapeBase shapeBase : shapeBaseList) {
+                shapeBase.clearShape();
             }
+            shapeBaseList.clear();
+            drawPanel.repaint();
         });
         menu.add(mClear);
 
@@ -124,33 +131,65 @@ public class RightMenuListener implements MouseListener {
         JPopupMenu menu = ComponentUtil.getNewJPopupMenu();
         //上对齐
         JMenuItem mUp = ComponentUtil.getNewJMenuItem("上对齐");
-        mUp.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        mUp.addActionListener(e -> {
+            alignShapeSet.clear();
+            shapeBaseList = drawPanel.getShapeBaseList();
+            for (ShapeBase shapeBase : shapeBaseList) {
+                if (shapeBase.isChecked()) {
+                    alignShapeSet.add(shapeBase);//加入移动图形Set
+                }
             }
+            AlignContext alignContext = new AlignContext(new UpAlignStrategy());//创建上对齐策略
+            AlignCommand alignCommand = new AlignCommand(drawPanel, alignShapeSet, alignContext);//创建对齐命令
+            CommandInvoker.singletonCommandInvoker.execute(alignCommand);//执行命令
         });
         menu.add(mUp);
 
         //下对齐
         JMenuItem mBottom = ComponentUtil.getNewJMenuItem("下对齐");
-        mBottom.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        mBottom.addActionListener(e -> {
+            alignShapeSet.clear();
+            shapeBaseList = drawPanel.getShapeBaseList();
+            for (ShapeBase shapeBase : shapeBaseList) {
+                if (shapeBase.isChecked()) {
+                    alignShapeSet.add(shapeBase);//加入移动图形Set
+                }
             }
+            AlignContext alignContext = new AlignContext(new DownAlignStrategy());//创建下对齐策略
+            AlignCommand alignCommand = new AlignCommand(drawPanel, alignShapeSet, alignContext);//创建对齐命令
+            CommandInvoker.singletonCommandInvoker.execute(alignCommand);//执行命令
         });
         menu.add(mBottom);
 
         //左对齐
         JMenuItem mLeft = ComponentUtil.getNewJMenuItem("左对齐");
-        mLeft.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        mLeft.addActionListener(e -> {
+            alignShapeSet.clear();
+            shapeBaseList = drawPanel.getShapeBaseList();
+            for (ShapeBase shapeBase : shapeBaseList) {
+                if (shapeBase.isChecked()) {
+                    alignShapeSet.add(shapeBase);//加入移动图形Set
+                }
             }
+            AlignContext alignContext = new AlignContext();//创建左对齐策略
+            AlignCommand alignCommand = new AlignCommand(drawPanel, alignShapeSet, alignContext);//创建对齐命令
+            CommandInvoker.singletonCommandInvoker.execute(alignCommand);//执行命令
         });
         menu.add(mLeft);
 
         //右对齐
         JMenuItem mRight = ComponentUtil.getNewJMenuItem("右对齐");
-        mRight.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        mRight.addActionListener(e -> {
+            alignShapeSet.clear();
+            shapeBaseList = drawPanel.getShapeBaseList();
+            for (ShapeBase shapeBase : shapeBaseList) {
+                if (shapeBase.isChecked()) {
+                    alignShapeSet.add(shapeBase);//加入移动图形Set
+                }
             }
+            AlignContext alignContext = new AlignContext(new RightAlignStrategy());//创建右对齐策略
+            AlignCommand alignCommand = new AlignCommand(drawPanel, alignShapeSet, alignContext);//创建对齐命令
+            CommandInvoker.singletonCommandInvoker.execute(alignCommand);//执行命令
         });
         menu.add(mRight);
 

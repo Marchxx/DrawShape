@@ -1,6 +1,7 @@
 package com.march.main.eneity.composite;
 
 
+import com.march.common.enums.AlignEnum;
 import com.march.main.eneity.ShapeBase;
 import com.march.main.factory.impl.StandardShapeFactory;
 
@@ -132,6 +133,56 @@ public class ShapeComposite extends ShapeBase {
     public void clearShape() {
         for (ShapeBase shapeBase : shapeBaseList) {
             shapeBase.clearShape();
+        }
+    }
+
+    //重写对齐、恢复方法
+    //调整对齐
+    public void adjustUpAlign() {//上对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.adjustUpAlign();
+        }
+    }
+
+    public void restoreUp() {//撤销上对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.restoreUp();
+        }
+    }
+
+    public void adjustDownAlign() {//下对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.adjustDownAlign();
+        }
+    }
+
+    public void restoreDown() {//撤销下对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.restoreDown();
+        }
+    }
+
+    public void adjustLeftAlign() {//左对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.adjustLeftAlign();
+        }
+    }
+
+    public void restoreLeft() {//撤销左对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.restoreLeft();
+        }
+    }
+
+    public void adjustRightAlign() {//右对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.adjustRightAlign();
+        }
+    }
+
+    public void restoreRight() {//撤销右对齐
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.restoreRight();
         }
     }
 }

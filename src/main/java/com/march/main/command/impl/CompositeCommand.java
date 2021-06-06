@@ -28,7 +28,6 @@ public class CompositeCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println(shapeComposite);
         List<ShapeBase> shapeBaseList = drawPanel.getShapeBaseList();
         Iterator<ShapeBase> iterator = shapeBaseList.iterator();
         while (iterator.hasNext()) {
