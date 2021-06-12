@@ -54,7 +54,7 @@ public class MyButton extends ShapeBase {
     }
 
     @Override
-    public void move(int deltaX, int deltaY) {
+    public void doMove(int deltaX, int deltaY) {
         //移动时修改MyButton类的坐标，防止外部获取出错
         startX += deltaX;
         startY += deltaY;

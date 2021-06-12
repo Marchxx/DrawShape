@@ -1,5 +1,7 @@
 package com.march.main.drawframe;
 
+import com.march.common.utils.ComponentUtil;
+import com.march.main.factory.impl.StandardShapeFactory;
 import com.march.main.listener.*;
 
 import javax.swing.*;
@@ -64,20 +66,22 @@ public class DrawFrame extends JFrame {
         DrawJToolBar drawJToolBar = new DrawJToolBar();
         tabbedPane.addTab("文件", drawJToolBar.getFileJToolBar());//设置菜单1
         tabbedPane.addTab("绘制图形", drawJToolBar.getDrawJToolBar()); //设置菜单2
-
-        //tabbedPane.addTab("移动图形", drawJToolBar.getMoveJToolBar()); //设置菜单3
-
-        tabbedPane.addTab("基本操作", drawJToolBar.getEditJToolBar()); //设置菜单4
-        tabbedPane.addTab("调整样式", drawJToolBar.getDecorateJToolBar()); //设置菜单5
+        tabbedPane.addTab("基本操作", drawJToolBar.getEditJToolBar()); //设置菜单3
+        tabbedPane.addTab("调整样式", drawJToolBar.getDecorateJToolBar()); //设置菜单4
         jPanelUp.add(tabbedPane, FlowLayout.LEFT);
         //设置默认选中的选项卡
         tabbedPane.setSelectedIndex(1);
 
 
         //2.创建左侧面板
-        JPanel jPanelLeft = new JPanel();
+        JPanel jPanelLeft = new JPanel(null);//使用绝对布局
         jPanelLeft.setBorder(BorderFactory.createEtchedBorder());
         jPanelLeft.setBackground(Color.white);
+        //2.1设置Jlabel，显示图元位置信息
+        JLabel jLabel = ComponentUtil.getShapeMsgLabel("<html>图元：&nbsp;<br/>位置：&nbsp;</html>");
+        jPanelLeft.add(jLabel);
+        //2.2抽象工厂传入JLabel
+        StandardShapeFactory.shapeFactory.createObserver(jLabel);
         jPanelLeft.setPreferredSize(new Dimension(200, 100));
 
 

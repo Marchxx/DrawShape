@@ -69,6 +69,11 @@ public class ShapeComposite extends ShapeBase {
     }
 
     @Override
+    public void doMove(int distanceX, int distanceY) {
+        //空实现
+    }
+
+    @Override
     public boolean isSelected(int x, int y) {
         boolean flag = false;
         for (ShapeBase shapeBase : shapeBaseList) {

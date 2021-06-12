@@ -48,7 +48,7 @@ public class Circle extends ShapeBase {
     }
 
     @Override
-    public void move(int deltaX, int deltaY) {
+    public void doMove(int deltaX, int deltaY) {
         this.startX += deltaX;
         this.startY += deltaY;
     }

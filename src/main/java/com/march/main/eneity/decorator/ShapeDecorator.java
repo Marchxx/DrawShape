@@ -1,6 +1,5 @@
 package com.march.main.eneity.decorator;
 
-import com.march.common.enums.AlignEnum;
 import com.march.main.eneity.ShapeBase;
 
 import java.awt.*;
@@ -59,6 +58,11 @@ public abstract class ShapeDecorator extends ShapeBase {
     @Override
     public void move(int deltaX, int deltaY) {
         target.move(deltaX, deltaY);
+    }
+
+    @Override
+    public void doMove(int distanceX, int distanceY) {
+        //空实现
     }
 
     @Override

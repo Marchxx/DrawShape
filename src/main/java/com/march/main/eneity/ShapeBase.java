@@ -3,15 +3,15 @@ package com.march.main.eneity;
 import com.march.common.enums.AlignEnum;
 import com.march.main.eneity.composite.ShapeComposite;
 import com.march.main.eneity.decorator.ShapeDecorator;
+import com.march.main.observe.Observable;
+import com.march.main.observe.Observer;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.Objects;
 
 /**
  * 图形抽象基类
  */
-public abstract class ShapeBase {
+public abstract class ShapeBase extends Observable {
 
     private String name;//图形名称
 
@@ -31,11 +31,13 @@ public abstract class ShapeBase {
 
     //组合、装饰对象使用的构造函数
     public ShapeBase(String name) {
+        super();
         this.name = name;
     }
 
     //普通对象使用的构造函数
     public ShapeBase(String name, int startX, int startY) {
+        super();
         this.name = name;
         this.startX = startX;
         this.startY = startY;
@@ -43,6 +45,7 @@ public abstract class ShapeBase {
 
     //数据库还原对象使用的构造函数
     public ShapeBase(String name, int startX, int startY, boolean checked, boolean filled, Color lineColor, Color fillColor) {
+        super();
         this.name = name;
         this.startX = startX;
         this.startY = startY;
@@ -112,10 +115,15 @@ public abstract class ShapeBase {
     //抽象方法：绘图，参数为面板的画笔对象
     public abstract void draw(Graphics2D g2d);
 
+    //模板方法，声明为final不能被重写会影响组合、装饰图形调用
+    public void move(int distanceX, int distanceY) {
+        doMove(distanceX, distanceY);
+        //调用通知方法
+        notifyObserver();
+    }
 
     //抽象方法：移动，根据x、y的偏移量进行移动
-    public abstract void move(int distanceX, int distanceY);
-
+    public abstract void doMove(int distanceX, int distanceY);
 
     //抽象方法：判断是否被选中，参数为鼠标坐标
     public abstract boolean isSelected(int x, int y);
@@ -196,5 +204,13 @@ public abstract class ShapeBase {
 
     public void restoreRight() {//撤销右对齐
         move(-deltaRight, 0);
+    }
+
+    //重写通知观察者方法，通过模板方法move调用，子类重写doMove
+    @Override
+    public void notifyObserver() {
+        for (Observer observer : observerList) {
+            observer.update(this);//将自身作为参数，推给观察者
+        }
     }
 }

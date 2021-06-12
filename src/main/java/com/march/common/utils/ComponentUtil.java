@@ -1,6 +1,7 @@
 package com.march.common.utils;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -40,6 +41,18 @@ public class ComponentUtil {
     }
 
     /**
+     * 显示图元信息的标签
+     */
+    public static JLabel getShapeMsgLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("黑体", Font.PLAIN, 17));
+        label.setSize(new Dimension(180, 50));
+        label.setBorder(new LineBorder(Color.BLACK, 2));
+        label.setLocation(10, 820);
+        return label;
+    }
+
+    /**
      * 弹出菜单条样式
      */
     public static JPopupMenu getNewJPopupMenu() {
@@ -58,6 +71,7 @@ public class ComponentUtil {
 
     /**
      * 返回鼠标位置，处理自定义按钮组件
+     *
      * @param e
      * @return
      */
