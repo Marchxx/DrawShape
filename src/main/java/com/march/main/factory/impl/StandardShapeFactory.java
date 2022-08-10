@@ -24,7 +24,8 @@ public class StandardShapeFactory implements ShapeFactory {
      */
     public static final StandardShapeFactory shapeFactory = new StandardShapeFactory();
 
-    private Observer observer;//观察者对象，调用createObserver时加入
+    //观察者对象，调用createObserver时加入
+    private Observer observer;
 
     //构造一个观察者，外部调用
     public void createObserver(JLabel jLabel) {

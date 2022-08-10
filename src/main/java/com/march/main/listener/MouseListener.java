@@ -107,8 +107,13 @@ public class MouseListener implements java.awt.event.MouseListener, MouseMotionL
             downChooseFlag = false;
         } else {
             //2.反之判断鼠标框选多个图形
-            if (startPoint.equals(endPoint)) return;//起点坐标与终点一致，与单选进行区分
-            if (drawPanel.getShapeBaseList() == null) return;
+            if (startPoint.equals(endPoint)) {
+                //起点坐标与终点一致，与单选进行区分
+                return;
+            }
+            if (drawPanel.getShapeBaseList() == null) {
+                return;
+            }
             //System.out.println("当前列表：" +drawPanel.getShapeBaseList());
             //鼠标画框实现多选
             cancelSelected();

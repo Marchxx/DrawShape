@@ -62,15 +62,12 @@ public class ShapeComposite extends ShapeBase {
     }
 
     @Override
-    public void move(int deltaX, int deltaY) {
-        for (ShapeBase shapeBase : shapeBaseList) {
-            shapeBase.move(deltaX, deltaY);
-        }
-    }
-
-    @Override
     public void doMove(int distanceX, int distanceY) {
-        //空实现
+        //1.应该调用shape的doMove方法，若调用move每个具体类都会发出通知
+        //2.重写notifyObserver，由模板方法完成只通知列表的第一个具体对象，若还是组合会递归调用
+        for (ShapeBase shapeBase : shapeBaseList) {
+            shapeBase.doMove(distanceX, distanceY);
+        }
     }
 
     @Override
@@ -189,5 +186,14 @@ public class ShapeComposite extends ShapeBase {
         for (ShapeBase shapeBase : shapeBaseList) {
             shapeBase.restoreRight();
         }
+    }
+
+    /**
+     * 重写通知方法
+     * 组合对象，只通知给列表第一个具体对象
+     */
+    @Override
+    public void notifyObserver() {
+        shapeBaseList.get(0).notifyObserver();
     }
 }

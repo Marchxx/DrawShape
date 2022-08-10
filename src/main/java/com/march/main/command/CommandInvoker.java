@@ -35,8 +35,9 @@ public class CommandInvoker {
 
     //撤销
     public void undo() {
-        if (undoList.size() <= 0)
+        if (undoList.size() <= 0) {
             return;
+        }
         //1.取出撤销列表中最后一条command，执行unExecute
         Command command = undoList.get(undoList.size() - 1);
         command.unExecute();
@@ -47,8 +48,9 @@ public class CommandInvoker {
 
     //重做
     public void redo() {
-        if (redoList.size() <= 0)
+        if (redoList.size() <= 0) {
             return;
+        }
         //1.取出重做列表中最后一条command，执行reExecute
         Command command = redoList.get(redoList.size() - 1);
         command.reExecute();

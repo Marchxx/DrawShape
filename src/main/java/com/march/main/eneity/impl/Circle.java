@@ -41,10 +41,7 @@ public class Circle extends ShapeBase {
 
     @Override
     public ShapeBase clone() {
-        return new Circle(this.getName(),
-                this.startX + 50,
-                this.startY,
-                this.radius);
+        return new Circle(this.getName(), this.startX + 50, this.startY, this.radius);
     }
 
     @Override
@@ -61,4 +58,6 @@ public class Circle extends ShapeBase {
         double distance = Math.sqrt(X + Y);
         return distance <= radius + 10;
     }
+
+
 }

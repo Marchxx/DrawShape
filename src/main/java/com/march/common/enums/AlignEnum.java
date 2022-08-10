@@ -7,10 +7,7 @@ import java.awt.*;
  */
 public enum AlignEnum {
 
-    ALIGN_UP(50),
-    ALIGN_DOWN(700),
-    ALIGN_LEFT(50),
-    ALIGN_RIGHT(1400);
+    ALIGN_UP(50), ALIGN_DOWN(700), ALIGN_LEFT(50), ALIGN_RIGHT(1400);
 
     private int delta;
 

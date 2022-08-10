@@ -56,13 +56,10 @@ public abstract class ShapeDecorator extends ShapeBase {
     }
 
     @Override
-    public void move(int deltaX, int deltaY) {
-        target.move(deltaX, deltaY);
-    }
-
-    @Override
     public void doMove(int distanceX, int distanceY) {
-        //空实现
+        //1.应该调用shape的doMove方法，若调用move每个具体类都会发出通知
+        //2.重写notifyObserver，由模板方法完成target的通知
+        target.doMove(distanceX, distanceY);
     }
 
     @Override
@@ -117,5 +114,14 @@ public abstract class ShapeDecorator extends ShapeBase {
 
     public void restoreRight() {//撤销右对齐
         target.restoreRight();
+    }
+
+    /**
+     * 重写该方法
+     * 装饰对象，通知给被包装的具体对象
+     */
+    @Override
+    public void notifyObserver() {
+        target.notifyObserver();
     }
 }

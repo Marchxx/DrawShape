@@ -13,6 +13,7 @@ import java.awt.*;
  */
 public abstract class ShapeBase extends Observable {
 
+
     private String name;//图形名称
 
     protected int startX;//起点横坐标
@@ -115,23 +116,31 @@ public abstract class ShapeBase extends Observable {
     //抽象方法：绘图，参数为面板的画笔对象
     public abstract void draw(Graphics2D g2d);
 
-    //模板方法，声明为final不能被重写会影响组合、装饰图形调用
-    public void move(int distanceX, int distanceY) {
+    /**
+     * 模板方法，实际客户端调用的方法
+     * 声明为final不能被重写
+     */
+    public final void move(int distanceX, int distanceY) {
         doMove(distanceX, distanceY);
         //调用通知方法
         notifyObserver();
     }
 
-    //抽象方法：移动，根据x、y的偏移量进行移动
+    /**
+     * 抽象方法：移动，根据x、y的偏移量进行移动
+     */
     public abstract void doMove(int distanceX, int distanceY);
 
-    //抽象方法：判断是否被选中，参数为鼠标坐标
+    /**
+     * 抽象方法：判断是否被选中，参数为鼠标坐标
+     */
     public abstract boolean isSelected(int x, int y);
 
 
-    //抽象方法：对象克隆
+    /**
+     * 抽象方法：对象克隆
+     */
     public abstract ShapeBase clone();
-
 
     /**
      * 清空图形：默认图形无实现，第三方组件类如MyButton进行重写
@@ -206,11 +215,15 @@ public abstract class ShapeBase extends Observable {
         move(-deltaRight, 0);
     }
 
-    //重写通知观察者方法，通过模板方法move调用，子类重写doMove
+    /**
+     * 通知观察者方法
+     * 通过模板方法move调用，子类重写抽象方法doMove
+     */
     @Override
     public void notifyObserver() {
         for (Observer observer : observerList) {
-            observer.update(this);//将自身作为参数，推给观察者
+            //将自身作为参数，推给观察者
+            observer.update(this);
         }
     }
 }
